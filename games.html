@@ -3,156 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games | Climate Wise</title>
+    <title>Eco-Tycoon | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --text-color: #0f0f0f;
+            --bg-color: #a8e6cf; /* Grassy Green */
             --header-bg: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
-            --bg-color: #0f0f0f;
-            --text-color: #ffffff;
-            --header-bg: #1b4d1f;
+            --bg-color: #1b4d1f;
+            --header-bg: #0a260d;
         }
 
         body { 
             font-family: 'Fredoka', sans-serif; 
             background-color: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0;
-            padding: 0;
+            margin: 0; overflow: hidden; /* Prevents scrolling while walking */
         }
 
         header { 
             background: var(--header-bg); 
-            padding: 1rem 0; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            padding: 0.5rem 0; 
+            color: white;
+            position: absolute;
+            top: 0; width: 100%; z-index: 100;
         }
 
-        /* YOUTUBE STYLE GRID */
-        .main-content {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .video-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .game-card {
-            width: 280px; /* Fixed width to ensure they show up */
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .thumbnail-box {
-            width: 100%;
-            height: 157px; /* 16:9 ratio for 280px width */
-            background-color: #888; /* Fallback color */
-            border-radius: 12px;
-            margin-bottom: 12px;
-            background-size: cover;
-            background-position: center;
+        /* THE GAME WORLD */
+        #game-world {
             position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(#81c784 2px, transparent 2px);
+            background-size: 40px 40px; /* Grid look */
         }
 
-        .game-card:hover .thumbnail-box {
-            transform: scale(1.02);
-            transition: 0.2s;
-        }
-
-        .game-info {
-            display: flex;
-            gap: 10px;
-        }
-
-        .channel-icon {
-            width: 36px;
-            height: 36px;
-            background-color: #2e7d32;
-            border-radius: 50%;
+        /* THE PLAYER */
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ffcc00;
+            border-radius: 10px;
+            border: 3px solid #333;
+            transition: top 0.1s, left 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            z-index: 50;
+        }
+
+        /* GAME OBJECTS */
+        .trash {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #795548;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s infinite;
+        }
+
+        .building {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            border: 4px solid #2e7d32;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* HUD & UI */
+        #hud {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            color: #333;
+        }
+
+        #shop {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            width: 200px;
+            z-index: 100;
+            color: #333;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
             color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 12px;
-            flex-shrink: 0;
         }
-
-        .game-title {
-            font-weight: 600;
-            font-size: 1rem;
-            line-height: 1.2;
-            margin-bottom: 4px;
-        }
-
-        .game-meta {
-            font-size: 0.85rem;
-            color: #606060;
-        }
-
-        [data-bs-theme="dark"] .game-meta { color: #aaa; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="container d-flex justify-content-between align-items-center">
-            <a href="index.html" style="text-decoration: none;"><h3 class="text-white m-0">🌍 Climate Wise Games</h3></a>
-            <a href="index.html" class="btn btn-outline-light rounded-pill px-4">Home</a>
+            <h4 class="m-0">Eco-Tycoon</h4>
+            <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill">Exit Game</a>
         </div>
     </header>
 
-    <div class="main-content">
-        <div class="video-grid">
-            
-            <a href="quest-game.html" class="game-card">
-                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400');"></div>
-                <div class="game-info">
-                    <div class="channel-icon">CW</div>
-                    <div>
-                        <div class="game-title">Carbon Quest: Footprint Challenge</div>
-                        <div class="game-meta">Climate Wise • 1.2M plays</div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="#" class="game-card">
-                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400');"></div>
-                <div class="game-info">
-                    <div class="channel-icon">CW</div>
-                    <div>
-                        <div class="game-title">Recycle It! The Sorting Game</div>
-                        <div class="game-meta">Climate Wise • 850k plays</div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="#" class="game-card">
-                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1509391366360-fe5bb626582f?w=400');"></div>
-                <div class="game-info">
-                    <div class="channel-icon">CW</div>
-                    <div>
-                        <div class="game-title">Solar Tycoon: Energy City</div>
-                        <div class="game-meta">Climate Wise • New</div>
-                    </div>
-                </div>
-            </a>
-
+    <div id="game-world">
+        <div id="player">😊</div>
         </div>
+
+    <div id="hud">
+        <h5 class="m-0">Eco-Points: <span id="points">0</span></h5>
+        <small>CO2 Reduction: <span id="auto-rate">0</span>/sec</small>
     </div>
 
+    <div id="shop">
+        <h6 class="text-center">Eco-Shop</h6>
+        <button class="btn btn-success btn-sm w-100 mb-2" onclick="buyUpgrade('turbine')">
+            Wind Turbine <br> <small>Cost: <span id="cost-turbine">10</span> EP</small>
+        </button>
+        <button class="btn btn-primary btn-sm w-100" onclick="buyUpgrade('solar')">
+            Solar Panel <br> <small>Cost: <span id="cost-solar">50</span> EP</small>
+        </button>
+    </div>
+
+    <div class="controls-hint">Use WASD or Arrow Keys to move!</div>
+
+    <script>
+        let points = 0;
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        let autoRate = 0;
+        let costs = { turbine: 10, solar: 50 };
+
+        const player = document.getElementById('player');
+        const pointsDisplay = document.getElementById('points');
+        const rateDisplay = document.getElementById('auto-rate');
+
+        // Movement
+        window.addEventListener('keydown', (e) => {
+            const speed = 20;
+            if (e.key === 'w' || e.key === 'ArrowUp') y -= speed;
+            if (e.key === 's' || e.key === 'ArrowDown') y += speed;
+            if (e.key === 'a' || e.key === 'ArrowLeft') x -= speed;
+            if (e.key === 'd' || e.key === 'ArrowRight') x += speed;
+
+            player.style.top = y + 'px';
+            player.style.left = x + 'px';
+            checkCollision();
+        });
+
+        // Spawn Trash
+        function spawnTrash() {
+            const trash = document.createElement('div');
+            trash.className = 'trash';
+            trash.innerHTML = '🗑️';
+            trash.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            trash.style.top = Math.random() * (window.innerHeight - 100) + 80 + 'px';
+            document.getElementById('game-world').appendChild(trash);
+        }
+
+        // Check if player is touching trash
+        function checkCollision() {
+            const trashes = document.querySelectorAll('.trash');
+            trashes.forEach(t => {
+                const rect1 = player.getBoundingClientRect();
+                const rect2 = t.getBoundingClientRect();
+
+                if (!(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom)) {
+                    t.remove();
+                    points += 1;
+                    updateUI();
+                    spawnTrash(); // Spawn a new one when collected
+                }
+            });
+        }
+
+        function buyUpgrade(type) {
+            if (points >= costs[type]) {
+                points -= costs[type];
+                
+                // Create building at player location
+                const b = document.createElement('div');
+                b.className = 'building';
+                b.innerHTML = type === 'turbine' ? '🌬️<br>Turbine' : '☀️<br>Solar';
+                b.style.left = x + 'px';
+                b.style.top = y + 'px';
+                document.getElementById('game-world').appendChild(b);
+
+                // Increase income
+                autoRate += (type === 'turbine' ? 1 : 5);
+                costs[type] = Math.round(costs[type] * 1.5);
+                updateUI();
+            } else {
+                alert("Not enough Eco-Points! Collect more trash!");
+            }
+        }
+
+        function updateUI() {
+            pointsDisplay.innerText = points;
+            rateDisplay.innerText = autoRate;
+            document.getElementById('cost-turbine').innerText = costs.turbine;
+            document.getElementById('cost-solar').innerText = costs.solar;
+        }
+
+        // Game Loops
+        setInterval(() => {
+            points += autoRate;
+            updateUI();
+        }, 1000);
+
+        // Start with some trash
+        for(let i=0; i<10; i++) spawnTrash();
+        player.style.top = y + 'px';
+        player.style.left = x + 'px';
+
+    </script>
 </body>
 </html>
