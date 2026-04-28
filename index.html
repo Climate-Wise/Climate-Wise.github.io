@@ -101,7 +101,7 @@
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
                 <a href="community.html" class="btn btn-warning rounded-pill px-3 mx-1 text-dark">Community</a>
-                <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">🌓 Mode</button>
+                <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Mode</button>
             </div>
         </div>
     </header>
@@ -128,11 +128,11 @@
         btn.addEventListener('click', () => {
             if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
                 htmlElement.setAttribute('data-bs-theme', 'light');
-                btn.innerHTML = "🌙 Dark";
+                btn.innerHTML = "Dark";
                 btn.className = "btn btn-light rounded-pill px-3 mx-1";
             } else {
                 htmlElement.setAttribute('data-bs-theme', 'dark');
-                btn.innerHTML = "☀️ Light";
+                btn.innerHTML = "Light";
                 btn.className = "btn btn-outline-light rounded-pill px-3 mx-1";
             }
         });
