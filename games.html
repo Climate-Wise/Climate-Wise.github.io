@@ -3,218 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco Block Blast | Climate Wise</title>
+    <title>Climate TCG Pocket | Climate Wise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         body { 
             font-family: 'Fredoka', sans-serif; 
-            background: #ffffff; 
+            background: #f0f2f5; 
             display: flex; flex-direction: column; align-items: center; 
-            touch-action: none; /* Prevents scrolling while dragging */
+            min-height: 100vh; margin: 0;
         }
-        h2 { color: #2e7d32; margin-top: 20px; }
-        
-        #score-container { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
 
-        /* THE 8x8 GRID */
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(8, 45px);
-            grid-template-rows: repeat(8, 45px);
-            gap: 4px;
-            background: #e0e0e0;
-            padding: 8px;
-            border-radius: 8px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-        }
-        .cell {
-            width: 45px; height: 45px;
-            background: #f8f9fa;
-            border-radius: 4px;
-        }
-        .filled { background: #66bb6a !important; transition: background 0.2s; }
+        .header-nav { width: 100%; background: #2e7d32; padding: 10px; text-align: center; color: white; }
 
-        /* PIECE TRAY */
-        #tray {
-            display: flex;
-            justify-content: space-around;
-            width: 380px;
-            margin-top: 30px;
-            min-height: 120px;
+        /* THE CARD */
+        .card-container {
+            perspective: 1000px;
+            margin-top: 50px;
         }
-        .piece {
-            cursor: grab;
-            display: grid;
-            gap: 2px;
-            transition: transform 0.1s;
+
+        .tcg-card {
+            width: 300px; height: 420px;
+            background: white;
+            border-radius: 18px;
+            border: 8px solid #333;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
         }
-        .piece:active { cursor: grabbing; transform: scale(1.1); }
-        .block { width: 30px; height: 30px; border-radius: 4px; }
-        
-        /* Piece Colors */
-        .color1 { background: #2e7d32; }
-        .color2 { background: #81c784; }
-        .color3 { background: #4caf50; }
+
+        /* Holo Effect Animation */
+        .holo {
+            border-color: #ffd700; /* Gold border for rare */
+            background: linear-gradient(135deg, #fff 0%, #fff 45%, #f0f 50%, #fff 55%, #fff 100%);
+            background-size: 300% 300%;
+            animation: holo-shimmer 3s infinite linear;
+        }
+
+        @keyframes holo-shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card-img {
+            width: 100%; height: 180px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 60px;
+        }
+
+        .card-type { font-weight: 600; color: #666; font-size: 14px; text-transform: uppercase; }
+        .card-name { font-size: 24px; font-weight: 600; margin: 5px 0; }
+        .card-info { font-size: 16px; color: #444; margin-top: 10px; }
+
+        .rarity-badge {
+            position: absolute; bottom: 15px; right: 15px;
+            font-size: 20px;
+        }
+
+        /* UI BUTTONS */
+        .controls { margin-top: 40px; text-align: center; }
+        .btn-open {
+            padding: 15px 40px; font-size: 20px;
+            background: #ff0000; color: white;
+            border: none; border-radius: 50px;
+            box-shadow: 0 5px 0 #b30000;
+            transition: 0.1s;
+        }
+        .btn-open:active { transform: translateY(4px); box-shadow: 0 1px 0 #b30000; }
+
+        .collection-stats { margin-top: 20px; color: #555; }
     </style>
 </head>
 <body>
 
-    <h2>Eco Block Blast</h2>
-    <div id="score-container">Score: <span id="score">0</span></div>
+    <div class="header-nav">
+        <h3 class="m-0">Climate TCG Pocket</h3>
+    </div>
 
-    <div id="grid"></div>
-
-    <div id="tray">
+    <div class="card-container">
+        <div id="card" class="tcg-card">
+            <div class="card-type" id="type">Common</div>
+            <div id="image" class="card-img">?</div>
+            <div class="card-name" id="name">Welcome!</div>
+            <div class="card-info" id="info">Open a pack to find your first Climate Wise card.</div>
+            <div class="rarity-badge" id="rarity">⚪</div>
         </div>
+    </div>
 
-    <div class="mt-4">
-        <a href="index.html" class="btn btn-outline-success rounded-pill">Back to Home</a>
+    <div class="controls">
+        <button class="btn-open" onclick="pullCard()">OPEN PACK</button>
+        <div class="collection-stats">
+            Cards Found: <span id="count">0</span> | Holos: <span id="holos">0</span>
+        </div>
+        <a href="index.html" class="d-block mt-4 text-decoration-none text-success">← Back to Home</a>
     </div>
 
     <script>
-        const gridEl = document.getElementById('grid');
-        const trayEl = document.getElementById('tray');
-        const scoreEl = document.getElementById('score');
-        let score = 0;
-        let grid = Array(8).fill().map(() => Array(8).fill(0));
-
-        // Create the UI Grid
-        function createGrid() {
-            gridEl.innerHTML = '';
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.dataset.r = r;
-                    cell.dataset.c = c;
-                    gridEl.appendChild(cell);
-                }
-            }
-        }
-
-        // Piece Templates (Shapes)
-        const shapes = [
-            [[1, 1], [1, 1]], // Square
-            [[1], [1], [1]], // Vertical Line
-            [[1, 1, 1]],     // Horizontal Line
-            [[1, 0], [1, 1]], // L shape
-            [[1]]             // Single dot
+        const cardData = [
+            // COMMON CARDS
+            { name: "LED Bulb", type: "Utility", info: "LEDs use 75% less energy than old bulbs.", img: "💡", rarity: "Common", icon: "⚪", prob: 0.7 },
+            { name: "Compost Bin", type: "Home", info: "Reduces methane by keeping food out of landfills.", img: "♻️", rarity: "Common", icon: "⚪", prob: 0.7 },
+            { name: "Public Transit", type: "Travel", info: "Taking the bus reduces your footprint significantly.", img: "🚌", rarity: "Common", icon: "⚪", prob: 0.7 },
+            
+            // RARE HOLO CARDS
+            { name: "Global Reforestation", type: "Holo Rare", info: "A mature tree absorbs 48 lbs of CO2 per year!", img: "🌳", rarity: "Rare", icon: "⭐", prob: 0.1 },
+            { name: "Ocean Cleanup", type: "Holo Rare", info: "The ocean produces over 50% of the world's oxygen.", img: "🌊", rarity: "Rare", icon: "⭐", prob: 0.1 },
+            { name: "Wind Farm", type: "Holo Rare", info: "One wind turbine can power 1,500 homes annually.", img: "🌬️", rarity: "Rare", icon: "⭐", prob: 0.1 }
         ];
 
-        function spawnPieces() {
-            trayEl.innerHTML = '';
-            for (let i = 0; i < 3; i++) {
-                const shape = shapes[Math.floor(Math.random() * shapes.length)];
-                const piece = document.createElement('div');
-                piece.className = 'piece';
-                piece.draggable = true;
-                piece.style.gridTemplateColumns = `repeat(${shape[0].length}, 32px)`;
-                
-                shape.forEach((row, r) => {
-                    row.forEach((val, c) => {
-                        const block = document.createElement('div');
-                        block.className = val ? 'block color' + (i + 1) : '';
-                        piece.appendChild(block);
-                    });
-                });
+        let count = 0;
+        let holos = 0;
 
-                piece.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('shape', JSON.stringify(shape));
-                    e.dataTransfer.setData('pieceId', i);
-                });
-                trayEl.appendChild(piece);
-            }
-        }
-
-        // Drag & Drop Logic
-        gridEl.addEventListener('dragover', (e) => e.preventDefault());
-        gridEl.addEventListener('drop', (e) => {
-            const shape = JSON.parse(e.dataTransfer.getData('shape'));
-            const rect = gridEl.getBoundingClientRect();
+        function pullCard() {
+            // Animation reset
+            const cardEl = document.getElementById('card');
+            cardEl.style.transform = "rotateY(360deg)";
             
-            // Simplified placement (find nearest cell)
-            const target = e.target;
-            if (!target.classList.contains('cell')) return;
-            
-            let startR = parseInt(target.dataset.r);
-            let startC = parseInt(target.dataset.c);
+            setTimeout(() => {
+                // RNG Logic
+                const isRare = Math.random() < 0.2; // 20% chance for a rare
+                const pool = cardData.filter(c => isRare ? c.rarity === "Rare" : c.rarity === "Common");
+                const card = pool[Math.floor(Math.random() * pool.length)];
 
-            if (canPlace(shape, startR, startC)) {
-                placeShape(shape, startR, startC);
-                checkLines();
-                // Simple logic: remove piece after use
-                const items = trayEl.querySelectorAll('.piece');
-                items[e.dataTransfer.getData('pieceId')].style.visibility = 'hidden';
-                
-                // If all hidden, spawn new ones
-                if ([...items].every(i => i.style.visibility === 'hidden')) spawnPieces();
-            }
-        });
+                // Update UI
+                document.getElementById('type').innerText = card.type;
+                document.getElementById('image').innerText = card.img;
+                document.getElementById('name').innerText = card.name;
+                document.getElementById('info').innerText = card.info;
+                document.getElementById('rarity').innerText = card.icon;
 
-        function canPlace(shape, startR, startC) {
-            for (let r = 0; r < shape.length; r++) {
-                for (let c = 0; c < shape[r].length; c++) {
-                    if (shape[r][c]) {
-                        if (startR + r >= 8 || startC + c >= 8 || grid[startR + r][startC + c]) return false;
-                    }
+                // Toggle Holo Effect
+                if (card.rarity === "Rare") {
+                    cardEl.classList.add('holo');
+                    holos++;
+                } else {
+                    cardEl.classList.remove('holo');
                 }
-            }
-            return true;
+
+                count++;
+                document.getElementById('count').innerText = count;
+                document.getElementById('holos').innerText = holos;
+                cardEl.style.transform = "rotateY(0deg)";
+            }, 300);
         }
-
-        function placeShape(shape, startR, startC) {
-            shape.forEach((row, r) => {
-                row.forEach((val, c) => {
-                    if (val) {
-                        grid[startR + r][startC + c] = 1;
-                        const cell = document.querySelector(`[data-r="${startR + r}"][data-c="${startC + c}"]`);
-                        cell.classList.add('filled');
-                        score += 10;
-                    }
-                });
-            });
-            scoreEl.innerText = score;
-        }
-
-        function checkLines() {
-            let rowsToClear = [];
-            let colsToClear = [];
-
-            // Check Rows
-            for (let r = 0; r < 8; r++) {
-                if (grid[r].every(cell => cell === 1)) rowsToClear.push(r);
-            }
-
-            // Check Cols
-            for (let c = 0; c < 8; c++) {
-                let col = [];
-                for (let r = 0; r < 8; r++) col.push(grid[r][c]);
-                if (col.every(cell => cell === 1)) colsToClear.push(c);
-            }
-
-            // Clear them
-            rowsToClear.forEach(r => {
-                for (let c = 0; c < 8; c++) {
-                    grid[r][c] = 0;
-                    document.querySelector(`[data-r="${r}"][data-c="${c}"]`).classList.remove('filled');
-                }
-                score += 100;
-            });
-
-            colsToClear.forEach(c => {
-                for (let r = 0; r < 8; r++) {
-                    grid[r][c] = 0;
-                    document.querySelector(`[data-r="${r}"][data-c="${c}"]`).classList.remove('filled');
-                }
-                score += 100;
-            });
-            scoreEl.innerText = score;
-        }
-
-        createGrid();
-        spawnPieces();
     </script>
 </body>
 </html>
