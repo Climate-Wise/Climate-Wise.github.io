@@ -12,14 +12,12 @@
     <style>
         :root {
             --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
             --text-color: #333333;
             --header-bg: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
             --bg-color: #121212;
-            --card-bg: #1e1e1e;
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
         }
@@ -49,9 +47,9 @@
 
         .logo img { height: 60px; }
 
-        .typewriter {
-            visibility: hidden; /* Prevent flash of full text before animation */
-            min-height: 1.5em; /* Prevents layout jumping */
+        /* Ensuring text container doesn't collapse while typing */
+        .typewriter-box {
+            min-height: 100px;
         }
 
         .about-img {
@@ -72,7 +70,6 @@
             <a href="index.html" class="logo">
                 <img src="favicon.png" alt="Climate Wise Logo">
             </a>
-
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
@@ -84,11 +81,9 @@
 
     <div class="container section-padding">
         <div class="row align-items-center mb-5">
-            <div class="col-md-7">
+            <div class="col-md-7 typewriter-box">
                 <h1 class="display-4 text-success fw-bold">Our Mission</h1>
-                <p id="typewriter1" class="lead typewriter">
-                    Climate Wise was built to bridge the gap between climate science and everyday action. Based at Metro Academic and Classical HS, we believe that education is the first step toward a greener future for St. Louis and beyond.
-                </p>
+                <p id="typewriter1" class="lead">Climate Wise was built to bridge the gap between climate science and everyday action. Based at Metro Academic and Classical HS, we believe that education is the first step toward a greener future for St. Louis and beyond.</p>
             </div>
             <div class="col-md-5">
                 <img src="placeholder-about.jpg" alt="Mission Image" class="about-img">
@@ -99,17 +94,15 @@
             <div class="col-md-5 order-md-1 order-2">
                 <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
             </div>
-            <div class="col-md-7 order-md-2 order-1">
+            <div class="col-md-7 order-md-2 order-1 typewriter-box">
                 <h2 class="text-success">The Advocate</h2>
-                <p id="typewriter2" class="typewriter">
-                    I am Elijah Funches, a student advocate dedicated to sustainability. Through this site, you can learn your carbon footprint, explore green resources, and even test your knowledge with our interactive games. Stay wise, stay clean!
-                </p>
+                <p id="typewriter2">I am Elijah Funches, a student advocate dedicated to sustainability. Through this site, you can learn your carbon footprint, explore green resources, and even test your knowledge with our interactive games. Stay wise, stay clean!</p>
             </div>
         </div>
     </div>
 
     <script>
-        /* Theme Toggle */
+        /* Theme Toggle Logic */
         const btn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
 
@@ -120,34 +113,35 @@
             btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
 
-        /* Faster Typewriter Animation */
-        function typeWriter(elementId, speed, callback) {
+        /* The Robust Typewriter Function */
+        function playAnimation(elementId, speed, nextCallback) {
             const element = document.getElementById(elementId);
-            const text = element.innerText; // Use innerText to avoid HTML tags during typing
-            element.innerHTML = "";
-            element.style.visibility = "visible";
+            const fullText = element.innerHTML; // Capture text first
+            element.innerHTML = ""; // Now clear it
+            element.style.opacity = "1"; // Ensure it's visible
             
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else if (callback) {
-                    callback(); // Run the next function when finished
+            let charIndex = 0;
+            function tick() {
+                if (charIndex < fullText.length) {
+                    element.innerHTML += fullText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(tick, speed);
+                } else if (nextCallback) {
+                    nextCallback();
                 }
             }
-            type();
+            tick();
         }
 
-        // Run animations on load with 10ms speed
-        window.onload = () => {
-            typeWriter("typewriter1", 10, () => {
+        // Run when the page is fully ready
+        window.addEventListener('DOMContentLoaded', () => {
+            // Speed set to 5ms for super fast Undertale style
+            playAnimation("typewriter1", 5, () => {
                 setTimeout(() => {
-                    typeWriter("typewriter2", 10);
-                }, 500); // 0.5s pause between sections
+                    playAnimation("typewriter2", 5);
+                }, 300); 
             });
-        };
+        });
     </script>
 </body>
 </html>
