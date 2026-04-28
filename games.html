@@ -1,99 +1,179 @@
-let points = 0;
-        let x = window.innerWidth / 2;
-        let y = window.innerHeight / 2;
-        let autoRate = 0;
-        let costs = { turbine: 10, solar: 50 };
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Dash | Climate Wise</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
-        const player = document.getElementById('player');
-        const pointsDisplay = document.getElementById('points');
-        const rateDisplay = document.getElementById('auto-rate');
+    <style>
+        body { 
+            font-family: 'Fredoka', sans-serif; 
+            margin: 0; overflow: hidden; 
+            background: #222; /* Dark road color */
+        }
+        #game-box {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(#333 0%, #333 50%, #444 50%, #444 100%);
+            background-size: 100% 100px;
+        }
+        #car {
+            position: absolute;
+            width: 60px; height: 40px;
+            background: #2e7d32;
+            border-radius: 8px;
+            border: 3px solid #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; z-index: 10;
+            transition: transform 0.1s linear;
+        }
+        .battery {
+            position: absolute;
+            width: 30px; height: 30px;
+            background: #ffeb3b;
+            border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px;
+        }
+        .fuel-station {
+            position: absolute;
+            width: 80px; height: 80px;
+            background: #00d1ff;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; text-align: center;
+        }
+        #ui {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: white; z-index: 100;
+            background: rgba(0,0,0,0.5);
+            padding: 15px; border-radius: 10px;
+        }
+        .dash-ready { color: #00ff00; }
+        .dash-charging { color: #ff4444; }
+    </style>
+</head>
+<body>
 
-        // Track which keys are currently held down
+    <div id="ui">
+        <h3 class="m-0">Time Left: <span id="timer">30</span>s</h3>
+        <p class="m-0">Distance to Station: <span id="dist">2000</span>m</p>
+        <p class="m-0" id="dash-status">Dash: READY (SPACE)</p>
+    </div>
+
+    <div id="game-box">
+        <div id="car">🚗</div>
+        </div>
+
+    <script>
+        let time = 30;
+        let distance = 2000;
+        let posX = 100;
+        let posY = window.innerHeight / 2;
+        let canDash = true;
+        let gameActive = true;
+
+        const car = document.getElementById('car');
+        const timerEl = document.getElementById('timer');
+        const distEl = document.getElementById('dist');
+        const dashEl = document.getElementById('dash-status');
         const keys = {};
-        window.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
-        window.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 
-        // SMOOTH MOVEMENT ENGINE
+        window.addEventListener('keydown', e => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.code === 'Space' && canDash && gameActive) performDash();
+        });
+        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+        function performDash() {
+            canDash = false;
+            posX += 150; // Huge forward jump
+            dashEl.innerText = "Dash: CHARGING...";
+            dashEl.className = "dash-charging";
+            setTimeout(() => {
+                canDash = true;
+                dashEl.innerText = "Dash: READY (SPACE)";
+                dashEl.className = "dash-ready";
+            }, 2000);
+        }
+
         function update() {
-            const speed = 5; // Pixels per frame
-            
-            if (keys['w'] || keys['arrowup']) y -= speed;
-            if (keys['s'] || keys['arrowdown']) y += speed;
-            if (keys['a'] || keys['arrowleft']) x -= speed;
-            if (keys['d'] || keys['arrowright']) x += speed;
+            if (!gameActive) return;
 
-            // Boundary checks (stay on screen)
-            x = Math.max(0, Math.min(window.innerWidth - 50, x));
-            y = Math.max(80, Math.min(window.innerHeight - 50, y));
+            let speed = 5;
+            if (keys['w'] || keys['arrowup']) posY -= speed;
+            if (keys['s'] || keys['arrowdown']) posY += speed;
+            if (keys['a'] || keys['arrowleft']) posX -= speed;
+            if (keys['d'] || keys['arrowright']) posX += speed + 2; // Natural forward roll
 
-            player.style.transform = `translate(${x}px, ${y}px)`;
-            
-            checkCollision();
+            // Constraints
+            posX = Math.max(0, posX);
+            posY = Math.max(0, Math.min(window.innerHeight - 40, posY));
+
+            car.style.transform = `translate(${posX}px, ${posY}px)`;
+
+            // Update Distance
+            distance = Math.max(0, 2000 - Math.floor(posX));
+            distEl.innerText = distance;
+
+            if (distance <= 0) win();
+
+            checkBattery();
             requestAnimationFrame(update);
         }
 
-        // Spawn Trash
-        function spawnTrash() {
-            const trash = document.createElement('div');
-            trash.className = 'trash';
-            trash.innerHTML = '🗑️';
-            trash.style.left = Math.random() * (window.innerWidth - 50) + 'px';
-            trash.style.top = Math.random() * (window.innerHeight - 150) + 100 + 'px';
-            document.getElementById('game-world').appendChild(trash);
-        }
+        function checkBattery() {
+            const batteries = document.querySelectorAll('.battery');
+            const carRect = car.getBoundingClientRect();
 
-        // Collision Logic
-        function checkCollision() {
-            const trashes = document.querySelectorAll('.trash');
-            const playerRect = player.getBoundingClientRect();
-
-            trashes.forEach(t => {
-                const trashRect = t.getBoundingClientRect();
-                if (!(playerRect.right < trashRect.left || 
-                      playerRect.left > trashRect.right || 
-                      playerRect.bottom < trashRect.top || 
-                      playerRect.top > trashRect.bottom)) {
-                    t.remove();
-                    points += 1;
-                    updateUI();
-                    spawnTrash();
+            batteries.forEach(b => {
+                const bRect = b.getBoundingClientRect();
+                if (!(carRect.right < bRect.left || carRect.left > bRect.right || 
+                      carRect.bottom < bRect.top || carRect.top > bRect.bottom)) {
+                    b.remove();
+                    time += 5; // Add time
+                    timerEl.innerText = time;
+                    spawnBattery();
                 }
             });
         }
 
-        function buyUpgrade(type) {
-            if (points >= costs[type]) {
-                points -= costs[type];
-                
-                const b = document.createElement('div');
-                b.className = 'building';
-                b.innerHTML = type === 'turbine' ? '🌬️<br>Turbine' : '☀️<br>Solar';
-                // Place building where player is standing
-                b.style.left = x + 'px';
-                b.style.top = y + 'px';
-                document.getElementById('game-world').appendChild(b);
-
-                autoRate += (type === 'turbine' ? 1 : 5);
-                costs[type] = Math.round(costs[type] * 1.5);
-                updateUI();
-            } else {
-                alert("Collect more trash for Eco-Points!");
-            }
+        function spawnBattery() {
+            const b = document.createElement('div');
+            b.className = 'battery';
+            b.innerHTML = '⚡';
+            b.style.left = (posX + Math.random() * 600 + 200) + 'px';
+            b.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            document.getElementById('game-box').appendChild(b);
         }
 
-        function updateUI() {
-            pointsDisplay.innerText = points;
-            rateDisplay.innerText = autoRate;
-            document.getElementById('cost-turbine').innerText = costs.turbine;
-            document.getElementById('cost-solar').innerText = costs.solar;
-        }
-
-        // Run auto-points every second
-        setInterval(() => {
-            points += autoRate;
-            updateUI();
+        // Countdown Timer
+        const countdown = setInterval(() => {
+            if (!gameActive) return;
+            time--;
+            timerEl.innerText = time;
+            if (time <= 0) gameOver();
         }, 1000);
 
-        // Initialize
-        for(let i=0; i<10; i++) spawnTrash();
-        update(); // Start the smooth movement loop
+        function win() {
+            gameActive = false;
+            alert("YOU REACHED THE CHARGER! ⚡ EV Power!");
+            location.reload();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            alert("OUT OF CHARGE! The car stopped.");
+            location.reload();
+        }
+
+        // Start
+        for(let i=0; i<5; i++) spawnBattery();
+        update();
+    </script>
+</body>
+</html>
