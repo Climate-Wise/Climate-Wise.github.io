@@ -3,158 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate TCG Pocket | Climate Wise</title>
+    <title>Climate TCG Pocket | 32 Card Set</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         body { 
             font-family: 'Fredoka', sans-serif; 
-            background: #f0f2f5; 
+            background: #ffffff; 
             display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; margin: 0;
+            min-height: 100vh; margin: 0; padding-bottom: 50px;
         }
 
-        .header-nav { width: 100%; background: #2e7d32; padding: 10px; text-align: center; color: white; }
+        .header-nav { width: 100%; background: #2e7d32; padding: 15px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         /* THE CARD */
-        .card-container {
-            perspective: 1000px;
-            margin-top: 50px;
-        }
+        .card-container { perspective: 1000px; margin-top: 30px; }
 
         .tcg-card {
-            width: 300px; height: 420px;
-            background: white;
-            border-radius: 18px;
-            border: 8px solid #333;
-            padding: 20px;
-            position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
+            width: 280px; height: 390px;
+            background: white; border-radius: 15px;
+            border: 6px solid #333; padding: 15px;
+            position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            transition: transform 0.4s ease; transform-style: preserve-3d;
         }
 
-        /* Holo Effect Animation */
-        .holo {
-            border-color: #ffd700; /* Gold border for rare */
-            background: linear-gradient(135deg, #fff 0%, #fff 45%, #f0f 50%, #fff 55%, #fff 100%);
+        /* Rarity Effects */
+        .holo-rare {
+            border-color: #ffd700;
+            background: linear-gradient(135deg, #fff 0%, #fff 45%, #0ff 50%, #fff 55%, #fff 100%);
             background-size: 300% 300%;
-            animation: holo-shimmer 3s infinite linear;
+            animation: shimmer 3s infinite linear;
         }
 
-        @keyframes holo-shimmer {
+        .legendary {
+            border-color: #ff00ea;
+            background: linear-gradient(45deg, #ff00ea, #00d4ff, #ff00ea);
+            background-size: 200% 200%;
+            animation: shimmer 1.5s infinite linear;
+            box-shadow: 0 0 20px rgba(255, 0, 234, 0.5);
+        }
+
+        @keyframes shimmer {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
-        .card-img {
-            width: 100%; height: 180px;
-            background: #e9ecef;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 60px;
-        }
+        .card-img { width: 100%; height: 160px; background: #f0f0f0; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
+        .card-type { font-weight: 600; color: #888; font-size: 12px; text-transform: uppercase; }
+        .card-name { font-size: 20px; font-weight: 600; margin: 2px 0; }
+        .card-info { font-size: 14px; color: #555; }
 
-        .card-type { font-weight: 600; color: #666; font-size: 14px; text-transform: uppercase; }
-        .card-name { font-size: 24px; font-weight: 600; margin: 5px 0; }
-        .card-info { font-size: 16px; color: #444; margin-top: 10px; }
-
-        .rarity-badge {
-            position: absolute; bottom: 15px; right: 15px;
-            font-size: 20px;
-        }
-
-        /* UI BUTTONS */
-        .controls { margin-top: 40px; text-align: center; }
+        /* UI */
         .btn-open {
-            padding: 15px 40px; font-size: 20px;
-            background: #ff0000; color: white;
-            border: none; border-radius: 50px;
-            box-shadow: 0 5px 0 #b30000;
-            transition: 0.1s;
+            padding: 12px 35px; font-size: 18px; background: #ff0000; color: white;
+            border: none; border-radius: 50px; box-shadow: 0 4px 0 #b30000; margin-top: 20px;
         }
-        .btn-open:active { transform: translateY(4px); box-shadow: 0 1px 0 #b30000; }
+        .btn-open:active { transform: translateY(2px); box-shadow: 0 1px 0 #b30000; }
 
-        .collection-stats { margin-top: 20px; color: #555; }
+        /* GALLERY */
+        #gallery {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px; width: 90%; max-width: 600px; margin-top: 40px;
+            padding: 20px; background: #f9f9f9; border-radius: 15px;
+        }
+        .gallery-item { width: 100%; aspect-ratio: 2/3; background: #ddd; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; opacity: 0.3; }
+        .unlocked { opacity: 1; background: #2e7d32; color: white; border: 2px solid gold; }
     </style>
 </head>
 <body>
 
     <div class="header-nav">
-        <h3 class="m-0">Climate TCG Pocket</h3>
+        <h3 class="m-0">Climate Wise TCG: Series 1</h3>
     </div>
 
     <div class="card-container">
         <div id="card" class="tcg-card">
-            <div class="card-type" id="type">Common</div>
-            <div id="image" class="card-img">?</div>
-            <div class="card-name" id="name">Welcome!</div>
-            <div class="card-info" id="info">Open a pack to find your first Climate Wise card.</div>
-            <div class="rarity-badge" id="rarity">⚪</div>
+            <div class="card-type" id="type">Ready?</div>
+            <div id="image" class="card-img">🎴</div>
+            <div class="card-name" id="name">Pocket Pack</div>
+            <div class="card-info" id="info">Collect all 32 Climate Wise data cards!</div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn-open" onclick="pullCard()">OPEN PACK</button>
-        <div class="collection-stats">
-            Cards Found: <span id="count">0</span> | Holos: <span id="holos">0</span>
-        </div>
-        <a href="index.html" class="d-block mt-4 text-decoration-none text-success">← Back to Home</a>
+    <button class="btn-open" onclick="pullCard()">OPEN PACK</button>
+    
+    <div class="mt-3">
+        <strong>Collected: <span id="found-count">0</span> / 32</strong>
     </div>
+
+    <div id="gallery">
+        </div>
+
+    <a href="index.html" class="mt-4 text-success text-decoration-none">← Back to Menu</a>
 
     <script>
         const cardData = [
-            // COMMON CARDS
-            { name: "LED Bulb", type: "Utility", info: "LEDs use 75% less energy than old bulbs.", img: "💡", rarity: "Common", icon: "⚪", prob: 0.7 },
-            { name: "Compost Bin", type: "Home", info: "Reduces methane by keeping food out of landfills.", img: "♻️", rarity: "Common", icon: "⚪", prob: 0.7 },
-            { name: "Public Transit", type: "Travel", info: "Taking the bus reduces your footprint significantly.", img: "🚌", rarity: "Common", icon: "⚪", prob: 0.7 },
-            
-            // RARE HOLO CARDS
-            { name: "Global Reforestation", type: "Holo Rare", info: "A mature tree absorbs 48 lbs of CO2 per year!", img: "🌳", rarity: "Rare", icon: "⭐", prob: 0.1 },
-            { name: "Ocean Cleanup", type: "Holo Rare", info: "The ocean produces over 50% of the world's oxygen.", img: "🌊", rarity: "Rare", icon: "⭐", prob: 0.1 },
-            { name: "Wind Farm", type: "Holo Rare", info: "One wind turbine can power 1,500 homes annually.", img: "🌬️", rarity: "Rare", icon: "⭐", prob: 0.1 }
+            // COMMON (16)
+            { id: 1, name: "LED Bulb", type: "Energy", info: "Lasts 25x longer than incandescents.", img: "💡", rarity: "Common" },
+            { id: 2, name: "Canvas Bag", type: "Waste", info: "One bag saves 1,000 plastic ones.", img: "🛍️", rarity: "Common" },
+            { id: 3, name: "Cold Wash", type: "Home", info: "90% of washer energy goes to heating water.", img: "🧼", rarity: "Common" },
+            { id: 4, name: "Bike Commute", type: "Travel", info: "Zero emissions per mile traveled.", img: "🚲", rarity: "Common" },
+            { id: 5, name: "Paper Straw", type: "Waste", info: "Biodegrades in weeks, unlike plastic.", img: "🥤", rarity: "Common" },
+            { id: 6, name: "Smart Plug", type: "Energy", info: "Stops 'vampire' energy drain.", img: "🔌", rarity: "Common" },
+            { id: 7, name: "Public Bus", type: "Travel", info: "One bus replaces 40+ personal cars.", img: "🚌", rarity: "Common" },
+            { id: 8, name: "Rain Barrel", type: "Nature", info: "Collects free water for your garden.", img: "🛢️", rarity: "Common" },
+            { id: 9, name: "House Plant", type: "Nature", info: "Filters indoor air pollutants naturally.", img: "🪴", rarity: "Common" },
+            { id: 10, name: "Recycle Bin", type: "Waste", info: "Turn trash back into treasure.", img: "♻️", rarity: "Common" },
+            { id: 11, name: "Bamboo Brush", type: "Home", info: "A sustainable swap for plastic toothbrushes.", img: "🪥", rarity: "Common" },
+            { id: 12, name: "Veggie Day", type: "Food", info: "Meatless Mondays save tons of water.", img: "🥦", rarity: "Common" },
+            { id: 13, name: "Solar Light", type: "Energy", info: "Powers your yard with the sun.", img: "🏮", rarity: "Common" },
+            { id: 14, name: "Compost Tea", type: "Nature", info: "Liquid gold for organic gardening.", img: "☕", rarity: "Common" },
+            { id: 15, name: "Refill Bottle", type: "Waste", info: "Avoids the 50 billion bottles tossed yearly.", img: "🍼", rarity: "Common" },
+            { id: 16, name: "Thrift Find", type: "Waste", info: "Second-hand clothes save 700 gallons of water.", img: "👕", rarity: "Common" },
+
+            // RARE HOLO (12)
+            { id: 17, name: "Wind Turbine", type: "Energy", info: "Generates clean power for 1,500 homes.", img: "🌬️", rarity: "Rare" },
+            { id: 18, name: "Electric Car", type: "Travel", info: "No tailpipe emissions, ever.", img: "🚗", rarity: "Rare" },
+            { id: 19, name: "Solar Array", type: "Energy", info: "Enough sun hits Earth in 1 hour to power a year.", img: "☀️", rarity: "Rare" },
+            { id: 20, name: "Ocean Cleanup", type: "Nature", info: "Removing plastic from the Great Patch.", img: "🌊", rarity: "Rare" },
+            { id: 21, name: "Forest Guard", type: "Nature", info: "Protecting the world's 'Lungs'.", img: "🌲", rarity: "Rare" },
+            { id: 22, name: "Hydro Power", type: "Energy", info: "Using gravity and water for 24/7 energy.", img: "💧", rarity: "Rare" },
+            { id: 23, name: "Coral Lab", type: "Nature", info: "Regrowing the ocean's most vital habitat.", img: "🪸", rarity: "Rare" },
+            { id: 24, name: "Geothermal", type: "Energy", info: "Heating homes using the Earth's core.", img: "🌋", rarity: "Rare" },
+            { id: 25, name: "Maglev Train", type: "Travel", info: "High speed travel with zero friction.", img: "🚄", rarity: "Rare" },
+            { id: 26, name: "Vertical Farm", type: "Food", info: "Growing food with 95% less water.", img: "🏢", rarity: "Rare" },
+            { id: 27, name: "Mushroom Pack", type: "Waste", info: "Packing material made from fungi.", img: "🍄", rarity: "Rare" },
+            { id: 28, name: "Green Roof", type: "Nature", info: "Gardens on skyscrapers cool cities down.", img: "🏙️", rarity: "Rare" },
+
+            // LEGENDARY (4)
+            { id: 29, name: "The Ozone Layer", type: "Atmosphere", info: "Our shield is finally healing!", img: "🛡️", rarity: "Legendary" },
+            { id: 30, name: "Nuclear Fusion", type: "Future", info: "The 'Holy Grail' of clean energy.", img: "⚛️", rarity: "Legendary" },
+            { id: 31, name: "Global Treaty", type: "Policy", info: "Every nation working as one for Earth.", img: "🤝", rarity: "Legendary" },
+            { id: 32, name: "Gaia's Heart", type: "Earth", info: "A perfectly balanced ecosystem.", img: "🌎", rarity: "Legendary" }
         ];
 
-        let count = 0;
-        let holos = 0;
+        let unlockedIds = new Set();
+
+        function initGallery() {
+            const gallery = document.getElementById('gallery');
+            for (let i = 1; i <= 32; i++) {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.id = 'slot-' + i;
+                item.innerText = '?';
+                gallery.appendChild(item);
+            }
+        }
 
         function pullCard() {
-            // Animation reset
             const cardEl = document.getElementById('card');
-            cardEl.style.transform = "rotateY(360deg)";
+            cardEl.style.transform = "rotateY(180deg)";
             
             setTimeout(() => {
-                // RNG Logic
-                const isRare = Math.random() < 0.2; // 20% chance for a rare
-                const pool = cardData.filter(c => isRare ? c.rarity === "Rare" : c.rarity === "Common");
+                const roll = Math.random();
+                let pool = [];
+                if (roll < 0.05) pool = cardData.filter(c => c.rarity === "Legendary");
+                else if (roll < 0.30) pool = cardData.filter(c => c.rarity === "Rare");
+                else pool = cardData.filter(c => c.rarity === "Common");
+
                 const card = pool[Math.floor(Math.random() * pool.length)];
 
-                // Update UI
                 document.getElementById('type').innerText = card.type;
                 document.getElementById('image').innerText = card.img;
                 document.getElementById('name').innerText = card.name;
                 document.getElementById('info').innerText = card.info;
-                document.getElementById('rarity').innerText = card.icon;
 
-                // Toggle Holo Effect
-                if (card.rarity === "Rare") {
-                    cardEl.classList.add('holo');
-                    holos++;
-                } else {
-                    cardEl.classList.remove('holo');
-                }
+                cardEl.className = "tcg-card";
+                if (card.rarity === "Rare") cardEl.classList.add('holo-rare');
+                if (card.rarity === "Legendary") cardEl.classList.add('legendary');
 
-                count++;
-                document.getElementById('count').innerText = count;
-                document.getElementById('holos').innerText = holos;
+                unlockedIds.add(card.id);
+                document.getElementById('slot-' + card.id).classList.add('unlocked');
+                document.getElementById('slot-' + card.id).innerText = card.img;
+                document.getElementById('found-count').innerText = unlockedIds.size;
+
                 cardEl.style.transform = "rotateY(0deg)";
-            }, 300);
+            }, 200);
         }
+
+        initGallery();
     </script>
 </body>
 </html>
