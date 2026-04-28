@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play & Learn | Climate Wise</title>
+    <title>Games | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
         :root {
             --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #0f0f0f; /* YouTube style dark text */
+            --text-color: #0f0f0f;
             --header-bg: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
             --bg-color: #0f0f0f;
-            --card-bg: #0f0f0f;
             --text-color: #ffffff;
             --header-bg: #1b4d1f;
         }
@@ -28,7 +25,8 @@
             font-family: 'Fredoka', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-color); 
-            transition: 0.3s ease; 
+            margin: 0;
+            padding: 0;
         }
 
         header { 
@@ -37,59 +35,47 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
         }
 
-        /* YouTube Grid Layout */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+        /* YOUTUBE STYLE GRID */
+        .main-content {
             padding: 40px 20px;
             max-width: 1200px;
             margin: auto;
         }
 
-        .game-card {
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s ease;
+        .video-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
 
-        .game-card:hover {
-            transform: scale(1.03);
+        .game-card {
+            width: 280px; /* Fixed width to ensure they show up */
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            margin-bottom: 20px;
         }
 
         .thumbnail-box {
             width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: #e0e0e0;
+            height: 157px; /* 16:9 ratio for 280px width */
+            background-color: #888; /* Fallback color */
             border-radius: 12px;
-            overflow: hidden;
             margin-bottom: 12px;
-            position: relative;
             background-size: cover;
             background-position: center;
+            position: relative;
         }
 
-        /* Play button overlay that appears on hover */
-        .thumbnail-box::after {
-            content: '▶';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40px;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .game-card:hover .thumbnail-box::after {
-            opacity: 1;
+        .game-card:hover .thumbnail-box {
+            transform: scale(1.02);
+            transition: 0.2s;
         }
 
         .game-info {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .channel-icon {
@@ -97,26 +83,23 @@
             height: 36px;
             background-color: #2e7d32;
             border-radius: 50%;
-            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
         }
 
         .game-title {
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            line-height: 1.2;
             margin-bottom: 4px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         .game-meta {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #606060;
         }
 
@@ -132,4 +115,44 @@
         </div>
     </header>
 
-    <div class="video-grid">
+    <div class="main-content">
+        <div class="video-grid">
+            
+            <a href="quest-game.html" class="game-card">
+                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400');"></div>
+                <div class="game-info">
+                    <div class="channel-icon">CW</div>
+                    <div>
+                        <div class="game-title">Carbon Quest: Footprint Challenge</div>
+                        <div class="game-meta">Climate Wise • 1.2M plays</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="game-card">
+                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400');"></div>
+                <div class="game-info">
+                    <div class="channel-icon">CW</div>
+                    <div>
+                        <div class="game-title">Recycle It! The Sorting Game</div>
+                        <div class="game-meta">Climate Wise • 850k plays</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="game-card">
+                <div class="thumbnail-box" style="background-image: url('https://images.unsplash.com/photo-1509391366360-fe5bb626582f?w=400');"></div>
+                <div class="game-info">
+                    <div class="channel-icon">CW</div>
+                    <div>
+                        <div class="game-title">Solar Tycoon: Energy City</div>
+                        <div class="game-meta">Climate Wise • New</div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
