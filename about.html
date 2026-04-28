@@ -6,12 +6,10 @@
     <title>About | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=DotGothic16&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
-        /* Shared CSS Variables */
         :root {
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
@@ -34,7 +32,6 @@
             margin: 0;
         }
 
-        /* Standardized Header (Matches Index) */
         header { 
             background: var(--header-bg); 
             padding: 1rem 0; 
@@ -52,17 +49,9 @@
 
         .logo img { height: 60px; }
 
-        /* Undertale Animation Styles */
-        .undertale-text {
-            display: inline-block;
-            overflow: hidden;
-            white-space: normal;
-            margin: 0 auto;
-            border-right: none; /* No cursor for authentic feel */
-        }
-
         .typewriter {
-            visibility: hidden; /* Start hidden for JS to reveal */
+            visibility: hidden; /* Prevent flash of full text before animation */
+            min-height: 1.5em; /* Prevents layout jumping */
         }
 
         .about-img {
@@ -71,7 +60,6 @@
             object-fit: cover;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            margin-top: 20px;
         }
 
         .section-padding { padding: 60px 0; }
@@ -82,7 +70,8 @@
     <header>
         <div class="navbar-container">
             <a href="index.html" class="logo">
-                <img src="favicon.png" alt="Climate Wise Logo"> </a>
+                <img src="favicon.png" alt="Climate Wise Logo">
+            </a>
 
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
@@ -98,13 +87,11 @@
             <div class="col-md-7">
                 <h1 class="display-4 text-success fw-bold">Our Mission</h1>
                 <p id="typewriter1" class="lead typewriter">
-                    Climate Wise was built to bridge the gap between climate science and everyday action. 
-                    Based at Metro Academic and Classical HS, we believe that education is the first step 
-                    toward a greener future for St. Louis and beyond.
+                    Climate Wise was built to bridge the gap between climate science and everyday action. Based at Metro Academic and Classical HS, we believe that education is the first step toward a greener future for St. Louis and beyond.
                 </p>
             </div>
             <div class="col-md-5">
-                <img src="placeholder-about.jpg" alt="About Image" class="about-img">
+                <img src="placeholder-about.jpg" alt="Mission Image" class="about-img">
             </div>
         </div>
 
@@ -115,33 +102,28 @@
             <div class="col-md-7 order-md-2 order-1">
                 <h2 class="text-success">The Advocate</h2>
                 <p id="typewriter2" class="typewriter">
-                   Place holder text here: the quick brown fox jumps over the lazy dog
+                    I am Elijah Funches, a student advocate dedicated to sustainability. Through this site, you can learn your carbon footprint, explore green resources, and even test your knowledge with our interactive games. Stay wise, stay clean!
                 </p>
             </div>
         </div>
     </div>
 
     <script>
-        /* Theme Toggle Logic (Carries over from Index) */
+        /* Theme Toggle */
         const btn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
 
         btn.addEventListener('click', () => {
-            if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
-                htmlElement.setAttribute('data-bs-theme', 'light');
-                btn.innerHTML = "Dark";
-                btn.className = "btn btn-light rounded-pill px-3 mx-1";
-            } else {
-                htmlElement.setAttribute('data-bs-theme', 'dark');
-                btn.innerHTML = "Light";
-                btn.className = "btn btn-outline-light rounded-pill px-3 mx-1";
-            }
+            const isDark = htmlElement.getAttribute('data-bs-theme') === 'dark';
+            htmlElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+            btn.innerHTML = isDark ? "Dark" : "Light";
+            btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
 
-        /* Undertale Typewriter Animation Logic */
-        function typeWriter(elementId, speed) {
+        /* Faster Typewriter Animation */
+        function typeWriter(elementId, speed, callback) {
             const element = document.getElementById(elementId);
-            const text = element.innerHTML;
+            const text = element.innerText; // Use innerText to avoid HTML tags during typing
             element.innerHTML = "";
             element.style.visibility = "visible";
             
@@ -151,15 +133,20 @@
                     element.innerHTML += text.charAt(i);
                     i++;
                     setTimeout(type, speed);
+                } else if (callback) {
+                    callback(); // Run the next function when finished
                 }
             }
             type();
         }
 
-        // Run animations on load
+        // Run animations on load with 10ms speed
         window.onload = () => {
-            typeWriter("typewriter1", 30); // 30ms per character
-            setTimeout(() => typeWriter("typewriter2", 30), 2000); // Wait 2s then start next
+            typeWriter("typewriter1", 10, () => {
+                setTimeout(() => {
+                    typeWriter("typewriter2", 10);
+                }, 500); // 0.5s pause between sections
+            });
         };
     </script>
 </body>
