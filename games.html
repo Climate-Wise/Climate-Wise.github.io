@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Quest | Climate Wise</title>
+    <title>Play & Learn | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
@@ -13,148 +13,123 @@
         :root {
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
-            --text-color: #333333;
+            --text-color: #0f0f0f; /* YouTube style dark text */
             --header-bg: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #f8f9fa;
+            --bg-color: #0f0f0f;
+            --card-bg: #0f0f0f;
+            --text-color: #ffffff;
             --header-bg: #1b4d1f;
         }
 
-        body { font-family: 'Fredoka', sans-serif; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s ease; }
-        header { background: var(--header-bg); padding: 1rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        
-        .game-container {
-            max-width: 700px;
-            margin: 3rem auto;
-            padding: 30px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            text-align: center;
+        body { 
+            font-family: 'Fredoka', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: 0.3s ease; 
         }
 
-        .carbon-meter {
-            height: 30px;
-            background: #e0e0e0;
-            border-radius: 15px;
-            margin: 20px 0;
+        header { 
+            background: var(--header-bg); 
+            padding: 1rem 0; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+        }
+
+        /* YouTube Grid Layout */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .game-card {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease;
+        }
+
+        .game-card:hover {
+            transform: scale(1.03);
+        }
+
+        .thumbnail-box {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Play button overlay that appears on hover */
+        .thumbnail-box::after {
+            content: '▶';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-card:hover .thumbnail-box::after {
+            opacity: 1;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 12px;
+        }
+
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            background-color: #2e7d32;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .game-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        #meter-fill {
-            height: 100%;
-            width: 50%;
-            background: linear-gradient(to right, #4caf50, #ff9800, #f44336);
-            transition: width 0.5s ease;
+        .game-meta {
+            font-size: 0.9rem;
+            color: #606060;
         }
 
-        .choice-btn {
-            width: 100%;
-            margin: 10px 0;
-            padding: 15px;
-            font-size: 1.1rem;
-            border-radius: 12px;
-            transition: 0.2s;
-        }
-
-        #result-area { display: none; }
+        [data-bs-theme="dark"] .game-meta { color: #aaa; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="container d-flex justify-content-between align-items:center;">
-            <a href="index.html" style="text-decoration: none;"><h3 class="text-white m-0">🌍 Climate Wise</h3></a>
-            <a href="index.html" class="btn btn-outline-light rounded-pill">Back to Home</a>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html" style="text-decoration: none;"><h3 class="text-white m-0">🌍 Climate Wise Games</h3></a>
+            <a href="index.html" class="btn btn-outline-light rounded-pill px-4">Home</a>
         </div>
     </header>
 
-    <div class="game-container">
-        <h2 id="question-title">Climate Quest: The Daily Grind</h2>
-        <p id="question-text">You're heading to Metro HS. How are you getting there?</p>
-        
-        <div class="carbon-meter">
-            <div id="meter-fill"></div>
-        </div>
-        <p><small>Your Carbon Footprint Meter</small></p>
-
-        <div id="choices">
-            <button class="btn btn-primary choice-btn" onclick="makeChoice(-15, 'Great! Walking or biking has zero emissions.')">I'm walking or biking today!</button>
-            <button class="btn btn-info choice-btn" onclick="makeChoice(-5, 'Good choice. Carpooling reduces the number of cars on the road.')">I'm carpooling with a friend.</button>
-            <button class="btn btn-danger choice-btn" onclick="makeChoice(20, 'Ouch. A single-passenger car trip is high in CO2.')">My parents are driving me alone.</button>
-        </div>
-
-        <div id="result-area">
-            <h4 id="feedbackText"></h4>
-            <button class="btn btn-success mt-3" onclick="nextQuestion()">Next Question</button>
-        </div>
-    </div>
-
-    <script>
-        let score = 50;
-        let currentStep = 0;
-
-        const questions = [
-            {
-                q: "It's lunch time! What are you eating?",
-                c: [
-                    { t: "A locally sourced veggie wrap", v: -10, f: "Nice! Plants use much less water and land than meat." },
-                    { t: "A beef burger", v: 25, f: "Beef has one of the highest carbon footprints of any food." },
-                    { t: "Leftovers from home", v: -5, f: "Reducing food waste is a huge win for the planet!" }
-                ]
-            },
-            {
-                q: "You need to buy a new shirt. Where are you going?",
-                c: [
-                    { t: "The local thrift store", v: -15, f: "Thrifting saves clothes from landfills and cuts out factory pollution." },
-                    { t: "A 'Fast Fashion' mall brand", v: 20, f: "Fast fashion is responsible for huge amounts of water waste." },
-                    { t: "Borrowing from a friend", v: -10, f: "The most sustainable item is the one that already exists!" }
-                ]
-            }
-        ];
-
-        function makeChoice(value, feedback) {
-            score += value;
-            if(score > 100) score = 100;
-            if(score < 0) score = 0;
-            
-            document.getElementById('meter-fill').style.width = score + "%";
-            document.getElementById('choices').style.display = 'none';
-            document.getElementById('result-area').style.display = 'block';
-            document.getElementById('feedbackText').innerText = feedback;
-        }
-
-        function nextQuestion() {
-            if (currentStep < questions.length) {
-                let data = questions[currentStep];
-                document.getElementById('question-title').innerText = "Climate Quest";
-                document.getElementById('question-text').innerText = data.q;
-                
-                let btnHtml = "";
-                data.c.forEach(choice => {
-                    btnHtml += `<button class="btn btn-outline-secondary choice-btn" onclick="makeChoice(${choice.v}, '${choice.f}')">${choice.t}</button>`;
-                });
-                
-                document.getElementById('choices').innerHTML = btnHtml;
-                document.getElementById('choices').style.display = 'block';
-                document.getElementById('result-area').style.display = 'none';
-                currentStep++;
-            } else {
-                finishGame();
-            }
-        }
-
-        function finishGame() {
-            document.getElementById('question-title').innerText = "Results!";
-            let finalMsg = score < 40 ? "You are a Climate Hero! 🌿" : "You have some work to do, but every small change counts! 🌍";
-            document.getElementById('question-text').innerText = finalMsg;
-            document.getElementById('choices').innerHTML = `<a href="index.html" class="btn btn-success btn-lg">Back to Home</a>`;
-            document.getElementById('result-area').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+    <div class="video-grid">
