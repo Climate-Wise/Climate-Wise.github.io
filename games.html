@@ -1,189 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Cards | 32 Card Set</title>
+    <title>Climate Uno | Climate Wise</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333333;
+            --header-bg: #2e7d32;
+            --card-bg: #ffffff;
+            --leaf-color: rgba(46, 125, 50, 0.2);
+        }
+
+        [data-bs-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #f8f9fa;
+            --header-bg: #1b4d1f;
+            --card-bg: #1e1e1e;
+            --leaf-color: rgba(76, 175, 80, 0.2);
+        }
+
         body { 
             font-family: 'Fredoka', sans-serif; 
-            background: #ffffff; 
-            display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; margin: 0; padding-bottom: 50px;
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: 0.3s ease;
+            overflow-x: hidden;
         }
 
-        .header-nav { width: 100%; background: #2e7d32; padding: 15px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-
-        /* THE CARD */
-        .card-container { perspective: 1000px; margin-top: 30px; }
-
-        .tcg-card {
-            width: 280px; height: 390px;
-            background: white; border-radius: 15px;
-            border: 6px solid #333; padding: 15px;
-            position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            transition: transform 0.4s ease; transform-style: preserve-3d;
+        header { 
+            background: var(--header-bg); 
+            padding: 1rem 0; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            z-index: 1000;
+            position: relative;
         }
 
-        /* Rarity Effects */
-        .holo-rare {
-            border-color: #ffd700;
-            background: linear-gradient(135deg, #fff 0%, #fff 45%, #0ff 50%, #fff 55%, #fff 100%);
-            background-size: 300% 300%;
-            animation: shimmer 3s infinite linear;
+        .navbar-container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1100px; 
+            margin: auto; 
+            padding: 0 20px;
         }
 
-        .legendary {
-            border-color: #ff00ea;
-            background: linear-gradient(45deg, #ff00ea, #00d4ff, #ff00ea);
-            background-size: 200% 200%;
-            animation: shimmer 1.5s infinite linear;
-            box-shadow: 0 0 20px rgba(255, 0, 234, 0.5);
+        /* Falling Leaves CSS */
+        #leaf-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .leaf { position: absolute; top: -50px; background-color: var(--leaf-color); border-radius: 2px 15px; animation: fall linear forwards; }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+        /* Game Board Styles */
+        .game-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+        .uno-card {
+            width: 80px;
+            height: 120px;
+            border-radius: 10px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+            border: 3px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .card-img { width: 100%; height: 160px; background: #f0f0f0; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
-        .card-type { font-weight: 600; color: #888; font-size: 12px; text-transform: uppercase; }
-        .card-name { font-size: 20px; font-weight: 600; margin: 2px 0; }
-        .card-info { font-size: 14px; color: #555; }
+        .uno-card:hover { transform: translateY(-10px); }
+        .uno-card.opponent { background: #555 !important; color: transparent !important; cursor: default; }
+        
+        .discard-pile .uno-card { width: 120px; height: 180px; font-size: 3rem; cursor: default; }
+        .discard-pile .uno-card:hover { transform: none; }
 
-        /* UI */
-        .btn-open {
-            padding: 12px 35px; font-size: 18px; background: #ff0000; color: white;
-            border: none; border-radius: 50px; box-shadow: 0 4px 0 #b30000; margin-top: 20px;
-        }
-        .btn-open:active { transform: translateY(2px); box-shadow: 0 1px 0 #b30000; }
+        .red { background-color: #ff5555; }
+        .blue { background-color: #5555ff; }
+        .green { background-color: #55aa55; }
+        .yellow { background-color: #ffaa00; }
 
-        /* GALLERY */
-        #gallery {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px; width: 90%; max-width: 600px; margin-top: 40px;
-            padding: 20px; background: #f9f9f9; border-radius: 15px;
-        }
-        .gallery-item { width: 100%; aspect-ratio: 2/3; background: #ddd; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; opacity: 0.3; }
-        .unlocked { opacity: 1; background: #2e7d32; color: white; border: 2px solid gold; }
+        .game-status { font-size: 1.2rem; margin: 20px 0; font-weight: 600; color: #2e7d32; }
     </style>
 </head>
 <body>
 
-    <div class="header-nav">
-        <h3 class="m-0">Climate Wise Cards</h3>
-    </div>
+    <div id="leaf-container"></div>
 
-    <div class="card-container">
-        <div id="card" class="tcg-card">
-            <div class="card-type" id="type">Ready?</div>
-            <div id="image" class="card-img">6️⃣7️⃣</div>
-            <div class="card-name" id="name">Pocket Pack</div>
-            <div class="card-info" id="info">Collect all 32 Climate Wise data cards and learn while ur at it!</div>
+    <header>
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <img src="logo-placeholder.png" alt="Climate Wise Logo" style="height:60px;">
+            </a>
+            <div class="nav-links">
+                <a href="about.html" class="btn btn-outline-light rounded-pill px-3">About</a>
+                <a href="community.html" class="btn btn-outline-light rounded-pill px-3">Community</a>
+                <a href="games.html" class="btn btn-light rounded-pill px-3">Games</a>
+                <button class="btn btn-light rounded-pill px-3" id="themeToggler">Dark</button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <button class="btn-open" onclick="pullCard()">OPEN PACK</button>
-    
-    <div class="mt-3">
-        <strong>Collected: <span id="found-count">0</span> / 32</strong>
-    </div>
-
-    <div id="gallery">
+    <div class="game-container">
+        <h2 class="text-success mb-4">Climate Uno 1v1</h2>
+        
+        <div id="opponent-hand" class="mb-4">
+            <h5>Opponent's Hand</h5>
+            <div id="opponent-cards"></div>
         </div>
 
-    <a href="index.html" class="mt-4 text-success text-decoration-none">← Back to Menu</a>
+        <div class="row align-items-center justify-content-center my-5">
+            <div class="col-auto">
+                <h5>Draw Pile</h5>
+                <div class="uno-card opponent" onclick="playerDraw()">+</div>
+            </div>
+            <div class="col-auto discard-pile">
+                <h5>Discard Pile</h5>
+                <div id="current-card"></div>
+            </div>
+        </div>
+
+        <div id="player-hand">
+            <h5>Your Hand</h5>
+            <div id="player-cards"></div>
+        </div>
+
+        <div id="status" class="game-status">Your turn! Match the color or number.</div>
+        <button class="btn btn-success rounded-pill" onclick="initGame()">Restart Game</button>
+    </div>
 
     <script>
-        const cardData = [
-            // COMMON (16)
-            { id: 1, name: "LED Bulb", type: "Energy", info: "Lasts 25x longer than incandescents.", img: "💡", rarity: "Common" },
-            { id: 2, name: "Canvas Bag", type: "Waste", info: "One bag saves 1,000 plastic ones.", img: "🛍️", rarity: "Common" },
-            { id: 3, name: "Cold Wash", type: "Home", info: "90% of washer energy goes to heating water.", img: "🧼", rarity: "Common" },
-            { id: 4, name: "Bike Commute", type: "Travel", info: "Zero emissions per mile traveled.", img: "🚲", rarity: "Common" },
-            { id: 5, name: "Paper Straw", type: "Waste", info: "Biodegrades in weeks, unlike plastic.", img: "🥤", rarity: "Common" },
-            { id: 6, name: "Smart Plug", type: "Energy", info: "Stops 'vampire' energy drain.", img: "🔌", rarity: "Common" },
-            { id: 7, name: "Public Bus", type: "Travel", info: "One bus replaces 40+ personal cars.", img: "🚌", rarity: "Common" },
-            { id: 8, name: "Rain Barrel", type: "Nature", info: "Collects free water for your garden.", img: "🛢️", rarity: "Common" },
-            { id: 9, name: "House Plant", type: "Nature", info: "Filters indoor air pollutants naturally.", img: "🪴", rarity: "Common" },
-            { id: 10, name: "Recycle Bin", type: "Waste", info: "Turn trash back into treasure.", img: "♻️", rarity: "Common" },
-            { id: 11, name: "Bamboo Brush", type: "Home", info: "A sustainable swap for plastic toothbrushes.", img: "🪥", rarity: "Common" },
-            { id: 12, name: "Veggie Day", type: "Food", info: "Meatless Mondays save tons of water.", img: "🥦", rarity: "Common" },
-            { id: 13, name: "Solar Light", type: "Energy", info: "Powers your yard with the sun.", img: "🏮", rarity: "Common" },
-            { id: 14, name: "Compost Tea", type: "Nature", info: "Liquid gold for organic gardening.", img: "☕", rarity: "Common" },
-            { id: 15, name: "Refill Bottle", type: "Waste", info: "Avoids the 50 billion bottles tossed yearly.", img: "🍼", rarity: "Common" },
-            { id: 16, name: "Thrift Find", type: "Waste", info: "Second-hand clothes save 700 gallons of water.", img: "👕", rarity: "Common" },
+        const colors = ['red', 'blue', 'green', 'yellow'];
+        const values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        let deck = [], playerHand = [], opponentHand = [], discardCard = null, isPlayerTurn = true;
 
-            // RARE HOLO (12)
-            { id: 17, name: "Wind Turbine", type: "Energy", info: "Generates clean power for 1,500 homes.", img: "🌬️", rarity: "Rare" },
-            { id: 18, name: "Electric Car", type: "Travel", info: "No tailpipe emissions, ever.", img: "🚗", rarity: "Rare" },
-            { id: 19, name: "Solar Array", type: "Energy", info: "Enough sun hits Earth in 1 hour to power a year.", img: "☀️", rarity: "Rare" },
-            { id: 20, name: "Ocean Cleanup", type: "Nature", info: "Removing plastic from the Great Patch.", img: "🌊", rarity: "Rare" },
-            { id: 21, name: "Forest Guard", type: "Nature", info: "Protecting the world's 'Lungs'.", img: "🌲", rarity: "Rare" },
-            { id: 22, name: "Hydro Power", type: "Energy", info: "Using gravity and water for 24/7 energy.", img: "💧", rarity: "Rare" },
-            { id: 23, name: "Coral Lab", type: "Nature", info: "Regrowing the ocean's most vital habitat.", img: "🪸", rarity: "Rare" },
-            { id: 24, name: "Geothermal", type: "Energy", info: "Heating homes using the Earth's core.", img: "🌋", rarity: "Rare" },
-            { id: 25, name: "Maglev Train", type: "Travel", info: "High speed travel with zero friction.", img: "🚄", rarity: "Rare" },
-            { id: 26, name: "Vertical Farm", type: "Food", info: "Growing food with 95% less water.", img: "🏢", rarity: "Rare" },
-            { id: 27, name: "Mushroom Pack", type: "Waste", info: "Packing material made from fungi.", img: "🍄", rarity: "Rare" },
-            { id: 28, name: "Green Roof", type: "Nature", info: "Gardens on skyscrapers cool cities down.", img: "🏙️", rarity: "Rare" },
+        function initGame() {
+            deck = [];
+            colors.forEach(c => values.forEach(v => deck.push({color: c, value: v})));
+            deck = deck.sort(() => Math.random() - 0.5);
+            
+            playerHand = deck.splice(0, 7);
+            opponentHand = deck.splice(0, 7);
+            discardCard = deck.splice(0, 1)[0];
+            
+            isPlayerTurn = true;
+            updateUI();
+        }
 
-            // LEGENDARY (4)
-            { id: 29, name: "The Ozone Layer", type: "Atmosphere", info: "Our shield is finally healing!", img: "🛡️", rarity: "Legendary" },
-            { id: 30, name: "Nuclear Fusion", type: "Future", info: "The 'Holy Grail' of clean energy.", img: "⚛️", rarity: "Legendary" },
-            { id: 31, name: "Global Treaty", type: "Policy", info: "Every nation working as one for Earth.", img: "🤝", rarity: "Legendary" },
-            { id: 32, name: "Gaia's Heart", type: "Earth", info: "A perfectly balanced ecosystem.", img: "🌎", rarity: "Legendary" }
-        ];
+        function updateUI() {
+            const pContainer = document.getElementById('player-cards');
+            pContainer.innerHTML = '';
+            playerHand.forEach((card, index) => {
+                const el = document.createElement('div');
+                el.className = `uno-card ${card.color}`;
+                el.innerText = card.value;
+                el.onclick = () => playCard(index);
+                pContainer.appendChild(el);
+            });
 
-        let unlockedIds = new Set();
+            const oContainer = document.getElementById('opponent-cards');
+            oContainer.innerHTML = '';
+            opponentHand.forEach(() => {
+                const el = document.createElement('div');
+                el.className = `uno-card opponent`;
+                el.innerText = '?';
+                oContainer.appendChild(el);
+            });
 
-        function initGallery() {
-            const gallery = document.getElementById('gallery');
-            for (let i = 1; i <= 32; i++) {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.id = 'slot-' + i;
-                item.innerText = '?';
-                gallery.appendChild(item);
+            const dContainer = document.getElementById('current-card');
+            dContainer.innerHTML = `<div class="uno-card ${discardCard.color}">${discardCard.value}</div>`;
+            
+            checkGameOver();
+        }
+
+        function playCard(index) {
+            if (!isPlayerTurn) return;
+            const card = playerHand[index];
+            if (card.color === discardCard.color || card.value === discardCard.value) {
+                discardCard = playerHand.splice(index, 1)[0];
+                isPlayerTurn = false;
+                document.getElementById('status').innerText = "Opponent is thinking...";
+                updateUI();
+                setTimeout(opponentTurn, 1500);
             }
         }
 
-        function pullCard() {
-            const cardEl = document.getElementById('card');
-            cardEl.style.transform = "rotateY(180deg)";
-            
-            setTimeout(() => {
-                const roll = Math.random();
-                let pool = [];
-                if (roll < 0.05) pool = cardData.filter(c => c.rarity === "Legendary");
-                else if (roll < 0.30) pool = cardData.filter(c => c.rarity === "Rare");
-                else pool = cardData.filter(c => c.rarity === "Common");
-
-                const card = pool[Math.floor(Math.random() * pool.length)];
-
-                document.getElementById('type').innerText = card.type;
-                document.getElementById('image').innerText = card.img;
-                document.getElementById('name').innerText = card.name;
-                document.getElementById('info').innerText = card.info;
-
-                cardEl.className = "tcg-card";
-                if (card.rarity === "Rare") cardEl.classList.add('holo-rare');
-                if (card.rarity === "Legendary") cardEl.classList.add('legendary');
-
-                unlockedIds.add(card.id);
-                document.getElementById('slot-' + card.id).classList.add('unlocked');
-                document.getElementById('slot-' + card.id).innerText = card.img;
-                document.getElementById('found-count').innerText = unlockedIds.size;
-
-                cardEl.style.transform = "rotateY(0deg)";
-            }, 200);
+        function playerDraw() {
+            if (!isPlayerTurn) return;
+            playerHand.push(deck.pop());
+            isPlayerTurn = false;
+            updateUI();
+            setTimeout(opponentTurn, 1000);
         }
 
-        initGallery();
+        function opponentTurn() {
+            const index = opponentHand.findIndex(c => c.color === discardCard.color || c.value === discardCard.value);
+            if (index !== -1) {
+                discardCard = opponentHand.splice(index, 1)[0];
+            } else {
+                opponentHand.push(deck.pop());
+            }
+            isPlayerTurn = true;
+            document.getElementById('status').innerText = "Your turn!";
+            updateUI();
+        }
+
+        function checkGameOver() {
+            if (playerHand.length === 0) alert("You Win! You're a Climate Hero!");
+            if (opponentHand.length === 0) alert("Opponent Wins! Try again!");
+            if (playerHand.length === 0 || opponentHand.length === 0) initGame();
+        }
+
+        // Theme & Leaves Logic
+        const themeBtn = document.getElementById('themeToggler');
+        themeBtn.onclick = () => {
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            document.documentElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+            themeBtn.innerText = isDark ? "Dark" : "Light";
+        };
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = Math.random() * 100 + 'vw';
+            const size = (Math.random() * 10 + 10) + 'px';
+            leaf.style.width = size; leaf.style.height = size;
+            const duration = Math.random() * 5 + 5;
+            leaf.style.animationDuration = duration + 's';
+            document.getElementById('leaf-container').appendChild(leaf);
+            setTimeout(() => leaf.remove(), duration * 1000);
+        }
+        setInterval(createLeaf, 400);
+
+        initGame();
     </script>
 </body>
 </html>
