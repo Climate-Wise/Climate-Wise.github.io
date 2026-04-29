@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Uno | Climate Wise</title>
+    <title>Climate Quest | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --header-bg: #2e7d32;
-            --card-bg: #ffffff;
+            --canvas-bg: #a1d6e2;
             --leaf-color: rgba(46, 125, 50, 0.2);
         }
 
@@ -22,7 +22,7 @@
             --bg-color: #121212;
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
-            --card-bg: #1e1e1e;
+            --canvas-bg: #2c3e50;
             --leaf-color: rgba(76, 175, 80, 0.2);
         }
 
@@ -30,84 +30,36 @@
             font-family: 'Fredoka', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-color); 
-            transition: 0.3s ease;
-            overflow-x: hidden;
+            margin: 0; overflow-x: hidden;
         }
 
-        header { 
-            background: var(--header-bg); 
-            padding: 1rem 0; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-            z-index: 1000;
-            position: relative;
-        }
+        header { background: var(--header-bg); padding: 1rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative; z-index: 1000; }
+        .navbar-container { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: auto; padding: 0 20px; }
 
-        .navbar-container { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            max-width: 1100px; 
-            margin: auto; 
-            padding: 0 20px;
-        }
-
-        /* Falling Leaves CSS */
-        #leaf-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
-        .leaf { position: absolute; top: -50px; background-color: var(--leaf-color); border-radius: 2px 15px; animation: fall linear forwards; }
-        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-
-        /* Game Board Styles */
-        .game-container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .uno-card {
-            width: 80px;
-            height: 120px;
-            border-radius: 10px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            margin: 5px;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.2s;
-            border: 3px solid white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .uno-card:hover { transform: translateY(-10px); }
-        .uno-card.opponent { background: #555 !important; color: transparent !important; cursor: default; }
+        /* Game UI */
+        #game-wrapper { position: relative; width: 800px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        canvas { background: var(--canvas-bg); display: block; }
         
-        .discard-pile .uno-card { width: 120px; height: 180px; font-size: 3rem; cursor: default; }
-        .discard-pile .uno-card:hover { transform: none; }
+        #ui-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6); color: white; text-align: center; z-index: 5;
+        }
 
-        .red { background-color: #ff5555; }
-        .blue { background-color: #5555ff; }
-        .green { background-color: #55aa55; }
-        .yellow { background-color: #ffaa00; }
+        #dialogue-box {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: white; color: #333; padding: 15px; border-radius: 10px;
+            display: none; border: 3px solid #2e7d32; font-weight: 600; z-index: 10;
+        }
 
-        .game-status { font-size: 1.2rem; margin: 20px 0; font-weight: 600; color: #2e7d32; }
+        .controls-hint { font-size: 0.9rem; margin-top: 10px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <div id="leaf-container"></div>
-
     <header>
         <div class="navbar-container">
-            <a href="index.html" class="logo">
-                <img src="logo-placeholder.png" alt="Climate Wise Logo" style="height:60px;">
-            </a>
+            <a href="index.html" class="logo"><img src="logo-placeholder.png" alt="Logo" style="height:60px;"></a>
             <div class="nav-links">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3">About</a>
                 <a href="community.html" class="btn btn-outline-light rounded-pill px-3">Community</a>
@@ -117,138 +69,143 @@
         </div>
     </header>
 
-    <div class="game-container">
-        <h2 class="text-success mb-4">Climate Uno 1v1</h2>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
         
-        <div id="opponent-hand" class="mb-4">
-            <h5>Opponent's Hand</h5>
-            <div id="opponent-cards"></div>
+        <!-- Title Screen -->
+        <div id="ui-overlay">
+            <h1 class="display-4 fw-bold">Climate Quest</h1>
+            <p>Help the community learn to be Climate Wise!</p>
+            <button class="btn btn-success btn-lg rounded-pill px-5" onclick="startGame()">Start Game</button>
+            <p class="controls-hint">Use Arrow Keys to Move & Jump</p>
         </div>
 
-        <div class="row align-items-center justify-content-center my-5">
-            <div class="col-auto">
-                <h5>Draw Pile</h5>
-                <div class="uno-card opponent" onclick="playerDraw()">+</div>
-            </div>
-            <div class="col-auto discard-pile">
-                <h5>Discard Pile</h5>
-                <div id="current-card"></div>
-            </div>
-        </div>
-
-        <div id="player-hand">
-            <h5>Your Hand</h5>
-            <div id="player-cards"></div>
-        </div>
-
-        <div id="status" class="game-status">Your turn! Match the color or number.</div>
-        <button class="btn btn-success rounded-pill" onclick="initGame()">Restart Game</button>
+        <!-- Dialogue -->
+        <div id="dialogue-box"></div>
     </div>
 
     <script>
-        const colors = ['red', 'blue', 'green', 'yellow'];
-        const values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        let deck = [], playerHand = [], opponentHand = [], discardCard = null, isPlayerTurn = true;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('ui-overlay');
+        const diagBox = document.getElementById('dialogue-box');
 
-        function initGame() {
-            deck = [];
-            colors.forEach(c => values.forEach(v => deck.push({color: c, value: v})));
-            deck = deck.sort(() => Math.random() - 0.5);
-            
-            playerHand = deck.splice(0, 7);
-            opponentHand = deck.splice(0, 7);
-            discardCard = deck.splice(0, 1)[0];
-            
-            isPlayerTurn = true;
-            updateUI();
+        let gameRunning = false;
+        let player = { x: 50, y: 300, w: 30, h: 30, dy: 0, speed: 5, jumpForce: 12, grounded: false, powerUp: false };
+        let keys = {};
+        
+        const platforms = [
+            { x: 0, y: 350, w: 800, h: 50 }, // Ground
+            { x: 200, y: 250, w: 150, h: 20 },
+            { x: 450, y: 180, w: 150, h: 20 },
+            { x: 100, y: 120, w: 100, h: 20 }
+        ];
+
+        const npcs = [
+            { x: 250, y: 210, w: 30, h: 40, color: '#e67e22', msg: "Did you know? Melting ice caps raise sea levels!" },
+            { x: 500, y: 140, w: 30, h: 40, color: '#9b59b6', msg: "Switching to LED bulbs is an easy way to lower your footprint!" }
+        ];
+
+        const powerUps = [
+            { x: 120, y: 80, w: 20, h: 20, active: true, type: 'Solar Panel' }
+        ];
+
+        function startGame() {
+            overlay.style.display = 'none';
+            gameRunning = true;
+            requestAnimationFrame(update);
         }
 
-        function updateUI() {
-            const pContainer = document.getElementById('player-cards');
-            pContainer.innerHTML = '';
-            playerHand.forEach((card, index) => {
-                const el = document.createElement('div');
-                el.className = `uno-card ${card.color}`;
-                el.innerText = card.value;
-                el.onclick = () => playCard(index);
-                pContainer.appendChild(el);
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        function update() {
+            if (!gameRunning) return;
+
+            // Physics
+            player.dy += 0.8; // Gravity
+            if (keys['ArrowLeft']) player.x -= player.speed;
+            if (keys['ArrowRight']) player.x += player.speed;
+            if (keys['ArrowUp'] && player.grounded) {
+                player.dy = -player.jumpForce;
+                player.grounded = false;
+            }
+
+            player.y += player.dy;
+            player.grounded = false;
+
+            // Platform Collision
+            platforms.forEach(p => {
+                if (player.x < p.x + p.w && player.x + player.w > p.x &&
+                    player.y + player.h > p.y && player.y + player.h < p.y + p.h) {
+                    player.y = p.y - player.h;
+                    player.dy = 0;
+                    player.grounded = true;
+                }
             });
 
-            const oContainer = document.getElementById('opponent-cards');
-            oContainer.innerHTML = '';
-            opponentHand.forEach(() => {
-                const el = document.createElement('div');
-                el.className = `uno-card opponent`;
-                el.innerText = '?';
-                oContainer.appendChild(el);
+            // NPC Interaction
+            let nearNPC = false;
+            npcs.forEach(n => {
+                if (player.x < n.x + n.w && player.x + player.w > n.x &&
+                    player.y < n.y + n.h && player.y + player.h > n.y) {
+                    diagBox.style.display = 'block';
+                    diagBox.innerText = n.msg;
+                    nearNPC = true;
+                }
+            });
+            if (!nearNPC) diagBox.style.display = 'none';
+
+            // Power-up Collision
+            powerUps.forEach(pu => {
+                if (pu.active && player.x < pu.x + pu.w && player.x + player.w > pu.x &&
+                    player.y < pu.y + pu.h && player.y + player.h > pu.y) {
+                    pu.active = false;
+                    player.jumpForce = 18; // Super Jump!
+                    player.powerUp = true;
+                    setTimeout(() => { player.jumpForce = 12; player.powerUp = false; }, 5000);
+                }
             });
 
-            const dContainer = document.getElementById('current-card');
-            dContainer.innerHTML = `<div class="uno-card ${discardCard.color}">${discardCard.value}</div>`;
-            
-            checkGameOver();
+            draw();
+            requestAnimationFrame(update);
         }
 
-        function playCard(index) {
-            if (!isPlayerTurn) return;
-            const card = playerHand[index];
-            if (card.color === discardCard.color || card.value === discardCard.value) {
-                discardCard = playerHand.splice(index, 1)[0];
-                isPlayerTurn = false;
-                document.getElementById('status').innerText = "Opponent is thinking...";
-                updateUI();
-                setTimeout(opponentTurn, 1500);
-            }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Platforms
+            ctx.fillStyle = '#27ae60';
+            platforms.forEach(p => ctx.fillRect(p.x, p.y, p.w, p.h));
+
+            // Draw NPCs
+            npcs.forEach(n => {
+                ctx.fillStyle = n.color;
+                ctx.fillRect(n.x, n.y, n.w, n.h);
+            });
+
+            // Draw Power-ups
+            powerUps.forEach(pu => {
+                if (pu.active) {
+                    ctx.fillStyle = '#f1c40f';
+                    ctx.beginPath();
+                    ctx.arc(pu.x + 10, pu.y + 10, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Draw Player
+            ctx.fillStyle = player.powerUp ? '#f39c12' : '#3498db';
+            ctx.fillRect(player.x, player.y, player.w, player.h);
         }
 
-        function playerDraw() {
-            if (!isPlayerTurn) return;
-            playerHand.push(deck.pop());
-            isPlayerTurn = false;
-            updateUI();
-            setTimeout(opponentTurn, 1000);
-        }
-
-        function opponentTurn() {
-            const index = opponentHand.findIndex(c => c.color === discardCard.color || c.value === discardCard.value);
-            if (index !== -1) {
-                discardCard = opponentHand.splice(index, 1)[0];
-            } else {
-                opponentHand.push(deck.pop());
-            }
-            isPlayerTurn = true;
-            document.getElementById('status').innerText = "Your turn!";
-            updateUI();
-        }
-
-        function checkGameOver() {
-            if (playerHand.length === 0) alert("You Win! You're a Climate Hero!");
-            if (opponentHand.length === 0) alert("Opponent Wins! Try again!");
-            if (playerHand.length === 0 || opponentHand.length === 0) initGame();
-        }
-
-        // Theme & Leaves Logic
+        // Theme Toggle logic remains the same
         const themeBtn = document.getElementById('themeToggler');
         themeBtn.onclick = () => {
             const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
             document.documentElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
             themeBtn.innerText = isDark ? "Dark" : "Light";
         };
-
-        function createLeaf() {
-            const leaf = document.createElement('div');
-            leaf.className = 'leaf';
-            leaf.style.left = Math.random() * 100 + 'vw';
-            const size = (Math.random() * 10 + 10) + 'px';
-            leaf.style.width = size; leaf.style.height = size;
-            const duration = Math.random() * 5 + 5;
-            leaf.style.animationDuration = duration + 's';
-            document.getElementById('leaf-container').appendChild(leaf);
-            setTimeout(() => leaf.remove(), duration * 1000);
-        }
-        setInterval(createLeaf, 400);
-
-        initGame();
     </script>
 </body>
 </html>
