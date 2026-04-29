@@ -32,6 +32,7 @@
             color: var(--text-color); 
             transition: 0.3s ease;
             margin: 0;
+            overflow-x: hidden;
         }
 
         header { 
@@ -52,7 +53,28 @@
             padding: 0 20px;
         }
 
-        .logo img { height: 60px; }
+        /* Slide Logic Styles */
+        .slide-container {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-slide {
+            display: none; /* Hidden by default */
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .info-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .about-img {
             width: 100%;
@@ -62,31 +84,39 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .section-padding { padding: 60px 0; }
-        
-        .typewriter-box { min-height: 100px; }
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
 
-        .video-wrapper, .calc-wrapper {
+        .progress-container {
+            position: fixed;
+            top: 90px; /* Below header */
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #2e7d32;
+            width: 0%;
+            transition: 0.3s ease;
+        }
+
+        .calc-wrapper, .video-wrapper {
             background: var(--video-bg);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-top: 40px;
         }
 
-        .ratio-16x9 {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .citation-text {
-            font-size: 0.85rem;
-            opacity: 0.7;
-            margin-top: 8px;
-            font-style: italic;
-        }
-
-        /* Calculator Specific Styles */
         .result-box {
             display: none;
             padding: 20px;
@@ -95,10 +125,6 @@
             color: #1b5e20;
             margin-top: 20px;
             border: 2px solid #2e7d32;
-        }
-        [data-bs-theme="dark"] .result-box {
-            background: #1b5e20;
-            color: #e8f5e9;
         }
     </style>
 </head>
@@ -110,8 +136,7 @@
                 <img src="logo-placeholder.png" alt="Climate Wise Logo">
             </a>
             <div class="nav-links d-flex align-items-center">
-                <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
-                <a href="#interview-section" class="btn btn-outline-light rounded-pill px-3 mx-1">Interview</a>
+                <a href="about.html" class="btn btn-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
                 <a href="games.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
                 <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
@@ -119,181 +144,188 @@
         </div>
     </header>
 
-    <div class="container section-padding">
+    <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+    </div>
+
+    <div class="container slide-container py-5">
         
-        <div class="row align-items-center mb-5">
-            <div class="col-md-7 typewriter-box">
-                <h1 class="display-4 text-success fw-bold">Our Mission:</h1>
-                <p id="typewriter1" class="lead">By the end of your time here on the website, we hope you not only find ways on how to lower your carbon footprint, but know exactly HOW you are making an impact! Before we get started, we must calculate your carbon footprint. A carbon footprint is calculated as the sum of all the greenhouse gas emissions from daily activities and consumption (Steps to Lower Your Carbon Footprint). This calculator will give you a basic rundown on where you fall and if you need to really change your lifestyles.</p>
-            </div>
-            <div class="col-md-5">
-                <img src="placeholder-about.jpg" alt="Mission" class="about-img">
-            </div>
-        </div>
-
-        <div class="calc-wrapper mb-5" id="calcSection">
-            <h2 class="text-success fw-bold mb-4">Quick Impact Calculator</h2>
-            <form id="carbonForm">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Main mode of transport?</label>
-                        <select class="form-select" id="transport">
-                            <option value="1">Walking/Bike</option>
-                            <option value="2">Public Transit</option>
-                            <option value="5">Car (Gasoline)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">What is your diet like?</label>
-                        <select class="form-select" id="diet">
-                            <option value="1">Vegan/Vegetarian</option>
-                            <option value="3">Mostly Chicken/Fish</option>
-                            <option value="6">Lots of Beef/Dairy</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Household size?</label>
-                        <input type="number" class="form-control" id="house" value="1" min="1">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-success mt-4 rounded-pill px-4" onclick="calculateFootprint()">Calculate My Impact</button>
-            </form>
-            <div id="calcResult" class="result-box">
-                <h4 id="resultTitle">Calculating...</h4>
-                <p id="resultDesc"></p>
-            </div>
-        </div>
-
-        <div class="row align-items-center mb-5">
-            <div class="col-md-5 order-md-1 order-2">
-                <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
-            </div>
-            <div class="col-md-7 order-md-2 order-1 typewriter-box">
-                <h2 class="text-success">Site maker</h2>
-                <p id="typewriter2">I am Elijah Funches. I kinda made this site. This took me way too long to make</p>
-            </div>
-        </div>
-
-        <hr class="my-5 opacity-25">
-
-        <div class="row align-items-center mb-5">
-            <div class="col-md-7 typewriter-box">
-                <h2 class="text-success">What is Global Warming anyway?</h2>
-                <p id="typewriter_warming">Global warming is the rapid increase in Earth’s average surface temperature. This change is long term and lasts for a very long time- it’s not something that can disappear with a snap of your fingers. Climate change is a real issue, “satellites have helped scientists collect information about our planet and its climate all over the world to reveal patterns of change,” (Climate Change). Global warming causes an increase in wildfires, rising sea-levels, and other natural events like droughts (“Overview of Greenhouse Gases).</p>
-            </div>
-            <div class="col-md-5">
-                <img src="warming-info.jpg" alt="Global Warming" class="about-img">
-                <p class="citation-text text-center">Source: (Lindsey)</p>
-            </div>
-        </div>
-
-        <div class="row align-items-center mb-5">
-            <div class="col-md-5 order-md-1 order-2">
-                <img src="cause-info.jpg" alt="Causes" class="about-img">
-            </div>
-            <div class="col-md-7 order-md-2 order-1 typewriter-box">
-                <h2 class="text-success">Ok, I know what it is, but who causes it?</h2>
-                <p id="typewriter_cause">Global warming is largely driven by human activities like the burning of fossil fuels which releases greenhouse gases that trap heat in the atmosphere (Clark and Lee 592). Not only that, powering homes and businesses produces massive amounts of CO2 which is also bad for the environment.  NASA reports that global temperatures have increased by about 1°C since
-the late 1800s, mainly because rising CO2 levels trap more heat in the atmosphere (Clark and Lee 592). This process adds to rising global temperatures, which as I said above, is not good.  </p>
-            </div>
-        </div>
-
-        <div class="row align-items-center mb-5">
-            <div class="col-md-7 typewriter-box">
-                <h2 class="text-success">Can we really even do anything?</h2>
-                <p id="typewriter_action">Eh, kind of. While not eating meat or riding the bike won't save the world, these collective actions can really make an impact. Ways we can lower our foot print are shown here: We can switch to renewable sources of energy (such as solar and wind energy) to power our homes and buildings, we can drive electric vehicles instead of those that burn fossil fuels, we can also support more local businesses that use and promote sustainable, climate-smart practices, and you can even think of more (Herring 1)! So if only you decide to make a change, the world isn't changing. If we all work to change- then of course! This is why I call for all of you to actually make a change within out community, and not just read this and never think of it again. Actually get up and do something!.</p>
-            </div>
-            <div class="col-md-5">
-                <img src="action-info.jpg" alt="Action" class="about-img">
-            </div>
-        </div>
-
-        <div id="interview-section" class="video-wrapper">
+        <!-- Slide 1: Mission -->
+        <div class="info-slide active" id="slide0">
             <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h2 class="text-success fw-bold mb-3">Watch my interview with the expert!</h2>
-                    <p id="typewriter3" class="mb-4">Watch my interview with Carmen Ellis, one of the greatest Environmental Health Specialists of all time. We discuss how exactly you can lower your carbon footrint. Watch till the end to see a cute baby.</p>
+                <div class="col-md-7">
+                    <h1 class="display-4 text-success fw-bold">Our Mission:</h1>
+                    <p class="lead">By the end of your time here on the website, we hope you not only find ways on how to lower your carbon footprint, but know exactly HOW you are making an impact! Before we get started, we must calculate your carbon footprint.</p>
                 </div>
-                <div class="col-lg-6">
-                    <div class="ratio ratio-16x9 shadow-lg">
-                        <iframe src="https://www.youtube.com/embed/UhuRp3VT0Lo" title="Carmen Ellis Interview" allowfullscreen></iframe>
+                <div class="col-md-5">
+                    <img src="placeholder-about.jpg" alt="Mission" class="about-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Calculator -->
+        <div class="info-slide" id="slide1">
+            <div class="calc-wrapper">
+                <h2 class="text-success fw-bold mb-4">Quick Impact Calculator</h2>
+                <form id="carbonForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Transport?</label>
+                            <select class="form-select" id="transport">
+                                <option value="1">Walking/Bike</option>
+                                <option value="2">Public Transit</option>
+                                <option value="5">Car (Gasoline)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Diet?</label>
+                            <select class="form-select" id="diet">
+                                <option value="1">Vegan/Vegetarian</option>
+                                <option value="3">Mostly Chicken/Fish</option>
+                                <option value="6">Lots of Beef/Dairy</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Household size?</label>
+                            <input type="number" class="form-control" id="house" value="1" min="1">
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-success mt-4 rounded-pill px-4" onclick="calculateFootprint()">Calculate My Impact</button>
+                </form>
+                <div id="calcResult" class="result-box">
+                    <h4 id="resultTitle">Calculating...</h4>
+                    <p id="resultDesc"></p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Site Maker -->
+        <div class="info-slide" id="slide2">
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
+                </div>
+                <div class="col-md-7">
+                    <h2 class="text-success display-5">Site maker</h2>
+                    <p class="lead">I am Elijah Funches. I kinda made this site. This took me way too long to make, but I hope it helps you get Climate Wise!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Global Warming -->
+        <div class="info-slide" id="slide3">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h2 class="text-success display-5">What is Global Warming?</h2>
+                    <p class="lead">Global warming is the rapid increase in Earth’s average surface temperature. It's not something that can disappear with a snap of your fingers. It causes wildfires, rising sea-levels, and droughts.</p>
+                </div>
+                <div class="col-md-5">
+                    <img src="warming-info.jpg" alt="Global Warming" class="about-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Causes -->
+        <div class="info-slide" id="slide4">
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <img src="cause-info.jpg" alt="Causes" class="about-img">
+                </div>
+                <div class="col-md-7">
+                    <h2 class="text-success display-5">Who causes it?</h2>
+                    <p class="lead">It is largely driven by human activities like the burning of fossil fuels which releases greenhouse gases that trap heat in the atmosphere. Powering homes and businesses produces massive amounts of CO2.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Action -->
+        <div class="info-slide" id="slide5">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h2 class="text-success display-5">Can we do anything?</h2>
+                    <p class="lead">Yes! We can switch to renewable sources (solar/wind), drive electric vehicles, and support sustainable local businesses. If we all work together, we can make a change.</p>
+                </div>
+                <div class="col-md-5">
+                    <img src="action-info.jpg" alt="Action" class="about-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Interview -->
+        <div class="info-slide" id="slide6">
+            <div class="video-wrapper">
+                <h2 class="text-success fw-bold mb-3">Expert Interview</h2>
+                <div class="ratio ratio-16x9 shadow-lg">
+                    <iframe src="https://www.youtube.com/embed/UhuRp3VT0Lo" title="Carmen Ellis Interview" allowfullscreen></iframe>
+                </div>
+                <p class="mt-3">Watch my interview with Carmen Ellis, Environmental Health Specialist, on how to lower your footprint!</p>
             </div>
         </div>
 
     </div>
 
+    <!-- Navigation Buttons -->
+    <div class="nav-controls">
+        <button class="btn btn-secondary rounded-pill px-4" id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+        <button class="btn btn-success rounded-pill px-4" id="nextBtn" onclick="changeSlide(1)">Next Slide</button>
+    </div>
+
     <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.info-slide');
+        const progressBar = document.getElementById('myBar');
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            
+            currentSlide += direction;
+
+            // Loop or hide buttons
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+
+            slides[currentSlide].classList.add('active');
+            
+            // Update Progress
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = progress + "%";
+
+            // Button Visibility
+            document.getElementById('prevBtn').style.visibility = (currentSlide === 0) ? "hidden" : "visible";
+            document.getElementById('nextBtn').innerText = (currentSlide === slides.length - 1) ? "Finish" : "Next Slide";
+        }
+
+        // Initialize
+        document.getElementById('prevBtn').style.visibility = "hidden";
+        progressBar.style.width = (1 / slides.length * 100) + "%";
+
         /* Calculator Logic */
         function calculateFootprint() {
             const transport = parseInt(document.getElementById('transport').value);
             const diet = parseInt(document.getElementById('diet').value);
             const house = parseInt(document.getElementById('house').value);
-            
-            // Basic logic: Higher points = higher footprint
             const total = (transport + diet) * (house > 4 ? 1.5 : 1);
             const resultBox = document.getElementById('calcResult');
-            const title = document.getElementById('resultTitle');
-            const desc = document.getElementById('resultDesc');
-            
             resultBox.style.display = "block";
             
             if (total <= 4) {
-                title.innerText = "Low Carbon Footprint!";
-                desc.innerText = "Yo that's sick! Your lifestyle choices are very planet friendly. You might not even need this site.";
+                document.getElementById('resultTitle').innerText = "Low Carbon Footprint!";
+                document.getElementById('resultDesc').innerText = "Yo that's sick! Your choices are planet friendly.";
             } else if (total <= 8) {
-                title.innerText = "Moderate Footprint ";
-                desc.innerText = "Eh, ur doing ok, but there are small changes (like eating more plant-based meals no matter how good meat is) that could help lower your impact.";
+                document.getElementById('resultTitle').innerText = "Moderate Footprint";
+                document.getElementById('resultDesc').innerText = "Doing okay, but small changes could help.";
             } else {
-                title.innerText = "High Carbon Footprint ⚠️";
-                desc.innerText = "Your choices contribute significantly to CO2 emissions. dude what are we doing 😭";
+                document.getElementById('resultTitle').innerText = "High Carbon Footprint ⚠️";
+                document.getElementById('resultDesc').innerText = "Dude what are we doing? Big changes needed!";
             }
         }
 
         /* Theme Toggle */
         const btn = document.getElementById('themeToggler');
-        const htmlElement = document.documentElement;
         btn.addEventListener('click', () => {
-            const isDark = htmlElement.getAttribute('data-bs-theme') === 'dark';
-            htmlElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            document.documentElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
             btn.innerHTML = isDark ? "Dark" : "Light";
-            btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
-        });
-
-        /* Animation Logic */
-        function playAnimation(elementId, speed, nextCallback) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            const fullText = element.innerHTML;
-            element.innerHTML = "";
-            element.style.opacity = "1";
-            
-            let charIndex = 0;
-            function tick() {
-                if (charIndex < fullText.length) {
-                    element.innerHTML += fullText.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(tick, speed);
-                } else if (nextCallback) {
-                    nextCallback();
-                }
-            }
-            tick();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            playAnimation("typewriter1", 5, () => {
-                playAnimation("typewriter2", 5, () => {
-                    playAnimation("typewriter_warming", 5, () => {
-                        playAnimation("typewriter_cause", 5, () => {
-                            playAnimation("typewriter_action", 5, () => {
-                                playAnimation("typewriter3", 5);
-                            });
-                        });
-                    });
-                });
-            });
         });
     </script>
 </body>
