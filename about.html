@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Climate Wise</title>
+    <title>About & Interview | Climate Wise</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
@@ -14,12 +14,14 @@
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --header-bg: #2e7d32;
+            --video-bg: #ffffff;
         }
 
         [data-bs-theme="dark"] {
             --bg-color: #121212;
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
+            --video-bg: #1e1e1e;
         }
 
         body { 
@@ -34,6 +36,9 @@
             background: var(--header-bg); 
             padding: 1rem 0; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar-container { 
@@ -57,8 +62,21 @@
 
         .section-padding { padding: 60px 0; }
         
-        /* Layout fix for typewriter */
         .typewriter-box { min-height: 120px; }
+
+        /* Video Container Styling */
+        .video-wrapper {
+            background: var(--video-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+
+        .ratio-16x9 {
+            border-radius: 15px;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +88,7 @@
             </a>
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
+                <a href="#interview-section" class="btn btn-outline-light rounded-pill px-3 mx-1">Interview</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
                 <a href="game.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
                 <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
@@ -99,13 +118,17 @@
             </div>
         </div>
 
-        <div class="row align-items-center mb-5">
-            <div class="col-md-7 typewriter-box">
-                <h2 class="text-success">The Vision</h2>
-                <p id="typewriter3">In the future, Climate Wise plans to host local workshops and community clean-up events. We want to turn digital advocacy into real-world impact. Every small choice you make today helps build a cleaner tomorrow.</p>
-            </div>
-            <div class="col-md-5">
-                <img src="future.jpg" alt="Future" class="about-img">
+        <div id="interview-section" class="video-wrapper">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="text-success fw-bold mb-3">Expert Insight</h2>
+                    <p id="typewriter3" class="mb-4">Watch my interview with <strong>Carmen Ellis</strong>, an Environmental Health Specialist. We discuss practical ways to reduce your carbon footprint, the impact of overconsumption, and why individual choices matter in a big world.</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ratio ratio-16x9 shadow-lg">
+                        <iframe src="https://www.youtube.com/embed/UhuRp3VT0Lo" title="Carmen Ellis Interview" allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -125,6 +148,7 @@
         /* Undertale Animation Logic */
         function playAnimation(elementId, speed, nextCallback) {
             const element = document.getElementById(elementId);
+            if (!element) return;
             const fullText = element.innerHTML;
             element.innerHTML = "";
             element.style.opacity = "1";
@@ -143,7 +167,6 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Speed 5ms for fast typing
             playAnimation("typewriter1", 5, () => {
                 setTimeout(() => {
                     playAnimation("typewriter2", 5, () => {
