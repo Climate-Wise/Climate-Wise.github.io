@@ -3,47 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Wise | Advocacy</title>
+    <title>Climate Wise | Home</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-    
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
-        /* Light/Dark Mode Variables */
         :root {
             --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
             --text-color: #333333;
             --header-bg: #2e7d32;
-            --header-shadow: rgba(0, 0, 0, 0.2);
+            --modal-bg: #ffffff;
         }
 
         [data-bs-theme="dark"] {
             --bg-color: #121212;
-            --card-bg: #1e1e1e;
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
-            --header-shadow: rgba(0, 0, 0, 0.5);
+            --modal-bg: #1e1e1e;
         }
 
         body { 
             font-family: 'Fredoka', sans-serif; 
-            line-height: 1.6; 
-            margin: 0; 
-            padding: 0; 
+            background-color: var(--bg-color); 
             color: var(--text-color); 
-            background-color: var(--bg-color);
-            transition: 0.3s ease; 
+            transition: 0.3s ease;
         }
 
         header { 
             background: var(--header-bg); 
             padding: 1rem 0; 
-            box-shadow: 0 4px 12px var(--header-shadow); 
-            position: relative;
-            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
         }
 
         .navbar-container { 
@@ -55,111 +46,111 @@
             padding: 0 20px;
         }
 
-        .logo img { 
-            height: 60px; 
-            transition: transform 0.3s;
+        /* Modal Styles */
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .logo img:hover {
-            transform: scale(1.05);
+        .custom-modal {
+            background: var(--modal-bg);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 2px solid #2e7d32;
         }
 
-        /* Works Cited Button - Kept distinct but you can change this to match too if needed */
-        .btn-cited {
-            background-color: #00d1ff !important; 
-            color: #000 !important;
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .modal-btn {
+            background: #2e7d32;
+            color: white;
             border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            margin-top: 20px;
             font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0, 209, 255, 0.4);
-            transition: 0.3s;
-        }
-
-        .btn-cited:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        .container-main { 
-            max-width: 900px; 
-            margin: 4rem auto; 
-            padding: 30px; 
-            background: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: 0.3s ease;
-        }
-
-        h1 { 
-            color: #2e7d32; 
-            font-weight: 600; 
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
-        }
-
-        footer { 
-            text-align: center; 
-            padding: 3rem; 
-            font-size: 0.9rem; 
-            color: #666; 
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
 
+    <div class="custom-modal-overlay" id="welcomeModal">
+        <div class="custom-modal">
+            <span class="close-modal" id="closeX">&times;</span>
+            <h2 class="text-success fw-bold mb-3">Welcome!</h2>
+            <p>Welcome to the site! After you're done reading the about page, please watch the interview and go to the community tab to complete a poll, thanks for visiting!</p>
+            <button class="modal-btn" id="closeBtn">Got it!</button>
+        </div>
+    </div>
+
     <header>
         <div class="navbar-container">
             <a href="index.html" class="logo">
-                <img src="logo-placeholder.png" alt="Climate Wise Logo">
+                <img src="logo-placeholder.png" alt="Climate Wise Logo" style="height:60px;">
             </a>
-
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
                 <a href="games.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
-                <a href="community.html" class="btn btn-warning rounded-pill px-3 mx-1 text-dark">Community</a>
-                
-                <a href="sources.html" class="btn btn-cited rounded-pill px-3 mx-1">Works Cited</a>
-                
+                <a href="community.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Community</a>
                 <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
             </div>
         </div>
     </header>
 
-    <div class="container-main text-center">
-        <h1>Be Green, Be Clean</h1>
-        <p class="lead mt-3">
-            Are you <strong>Climate Wise?</strong> Well, most people aren't. Our goal is to inform you on how you can lower your carbon footprint!
-        </p>
-        <hr class="my-4">
-        <p>Click the green button below to get started!</p>
-        <a href="about.html" class="btn btn-success rounded-pill btn-lg px-5 mt-3">Learn how to get Climate Wise</a>
-    </div>
-
-    <footer>
-        <p>&copy; 2026 Climate Wise Project</p>
-        <p>Created by Elijah Funches | METRO ACADEMIC AND CLASSICAL HS</p>
-    </footer>
+    <main class="container py-5 text-center">
+        <h1>Welcome to Climate Wise</h1>
+        <p class="lead">Your journey to a smaller footprint starts here.</p>
+    </main>
 
     <script>
-        const btn = document.getElementById('themeToggler');
-        const htmlElement = document.documentElement;
+        /* Modal Logic */
+        const modal = document.getElementById('welcomeModal');
+        const closeX = document.getElementById('closeX');
+        const closeBtn = document.getElementById('closeBtn');
 
-        btn.addEventListener('click', () => {
-            if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
-                htmlElement.setAttribute('data-bs-theme', 'light');
-                btn.innerHTML = "Dark";
-                btn.className = "btn btn-light rounded-pill px-3 mx-1";
-            } else {
-                htmlElement.setAttribute('data-bs-theme', 'dark');
-                btn.innerHTML = "Light";
-                btn.className = "btn btn-outline-light rounded-pill px-3 mx-1";
-            }
+        // Show modal on load
+        window.onload = function() {
+            modal.style.display = 'flex';
+        }
+
+        // Close modal functions
+        closeX.onclick = () => modal.style.display = 'none';
+        closeBtn.onclick = () => modal.style.display = 'none';
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = 'none';
+        }
+
+        /* Theme Toggle */
+        const themeBtn = document.getElementById('themeToggler');
+        const htmlElement = document.documentElement;
+        themeBtn.addEventListener('click', () => {
+            const isDark = htmlElement.getAttribute('data-bs-theme') === 'dark';
+            htmlElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+            themeBtn.innerHTML = isDark ? "Dark" : "Light";
+            themeBtn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
     </script>
-
 </body>
 </html>
