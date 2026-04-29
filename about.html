@@ -62,9 +62,8 @@
 
         .section-padding { padding: 60px 0; }
         
-        .typewriter-box { min-height: 120px; }
+        .typewriter-box { min-height: 100px; }
 
-        /* Video Container Styling */
         .video-wrapper {
             background: var(--video-bg);
             border-radius: 20px;
@@ -113,15 +112,47 @@
                 <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
             </div>
             <div class="col-md-7 order-md-2 order-1 typewriter-box">
-                <h2 class="text-success">The Advocate</h2>
+                <h2 class="text-success">Site maker</h2>
                 <p id="typewriter2">I am Elijah Funches. I kinda made this site.</p>
+            </div>
+        </div>
+
+        <hr class="my-5 opacity-25">
+
+        <div class="row align-items-center mb-5">
+            <div class="col-md-7 typewriter-box">
+                <h2 class="text-success">What is Global Warming anyway?</h2>
+                <p id="typewriter_warming">Add text here.</p>
+            </div>
+            <div class="col-md-5">
+                <img src="warming-info.jpg" alt="Global Warming" class="about-img">
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-5">
+            <div class="col-md-5 order-md-1 order-2">
+                <img src="cause-info.jpg" alt="Causes" class="about-img">
+            </div>
+            <div class="col-md-7 order-md-2 order-1 typewriter-box">
+                <h2 class="text-success">Ok, I know what it is, but who causes it?</h2>
+                <p id="typewriter_cause">While large industries and energy companies are the biggest contributors, our collective daily choices—the cars we drive, the energy we use at home, and the products we buy—all play a part. We are all connected to the cycle.</p>
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-5">
+            <div class="col-md-7 typewriter-box">
+                <h2 class="text-success">Can we really even do anything?</h2>
+                <p id="typewriter_action">Yes! Individual action creates a "ripple effect." When you lower your footprint, you influence your friends, family, and companies to change. Large-scale change always starts with informed individuals taking the first step.</p>
+            </div>
+            <div class="col-md-5">
+                <img src="action-info.jpg" alt="Action" class="about-img">
             </div>
         </div>
 
         <div id="interview-section" class="video-wrapper">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <h2 class="text-success fw-bold mb-3">Expert Insight</h2>
+                    <h2 class="text-success fw-bold mb-3">Watch my interview with the expert!</h2>
                     <p id="typewriter3" class="mb-4">Watch my interview with Carmen Ellis, one of the greatest Environmental Health Specialists of all time. We discuss how exactly you can lower your carbon footrint. Watch till the end to see a cute baby.</p>
                 </div>
                 <div class="col-lg-6">
@@ -167,14 +198,17 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Sequential Animation Chain
             playAnimation("typewriter1", 5, () => {
-                setTimeout(() => {
-                    playAnimation("typewriter2", 5, () => {
-                        setTimeout(() => {
-                            playAnimation("typewriter3", 5);
-                        }, 300);
+                playAnimation("typewriter2", 5, () => {
+                    playAnimation("typewriter_warming", 5, () => {
+                        playAnimation("typewriter_cause", 5, () => {
+                            playAnimation("typewriter_action", 5, () => {
+                                playAnimation("typewriter3", 5);
+                            });
+                        });
                     });
-                }, 300); 
+                });
             });
         });
     </script>
