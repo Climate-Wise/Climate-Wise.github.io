@@ -47,11 +47,6 @@
 
         .logo img { height: 60px; }
 
-        /* Ensuring text container doesn't collapse while typing */
-        .typewriter-box {
-            min-height: 100px;
-        }
-
         .about-img {
             width: 100%;
             height: 350px;
@@ -61,6 +56,9 @@
         }
 
         .section-padding { padding: 60px 0; }
+        
+        /* Layout fix for typewriter */
+        .typewriter-box { min-height: 120px; }
     </style>
 </head>
 <body>
@@ -68,44 +66,55 @@
     <header>
         <div class="navbar-container">
             <a href="index.html" class="logo">
-                <img src="logo-placeholder.png" alt="Climate Wise Logo">
+                <img src="favicon.png" alt="Climate Wise Logo">
             </a>
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
-                <a href="games.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
+                <a href="game.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
                 <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
             </div>
         </div>
     </header>
 
     <div class="container section-padding">
+        
         <div class="row align-items-center mb-5">
             <div class="col-md-7 typewriter-box">
                 <h1 class="display-4 text-success fw-bold">Our Mission</h1>
-                <p id="typewriter1" class="lead">By the end of your time here on the website, we hope you not only find ways on how to lower your carbon footprint, but know exactly HOW you are making an impact!</p>
+                <p id="typewriter1" class="lead">Climate Wise was built to bridge the gap between climate science and everyday action. Based at Metro Academic and Classical HS, we believe that education is the first step toward a greener future for St. Louis and beyond.</p>
             </div>
             <div class="col-md-5">
-                <img src="placeholder-about.jpg" alt="Mission Image" class="about-img">
+                <img src="mission.jpg" alt="Mission" class="about-img">
             </div>
         </div>
 
-        <div class="row align-items-center">
+        <div class="row align-items-center mb-5">
             <div class="col-md-5 order-md-1 order-2">
-                <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
+                <img src="elijah.jpg" alt="Elijah" class="about-img">
             </div>
             <div class="col-md-7 order-md-2 order-1 typewriter-box">
                 <h2 class="text-success">The Advocate</h2>
-                <p id="typewriter2">I am Elijah Funches, the creator of this site.</p>
+                <p id="typewriter2">I am Elijah Funches, a student advocate dedicated to sustainability. Through this site, you can learn your carbon footprint, explore green resources, and even test your knowledge with our interactive games.</p>
             </div>
         </div>
+
+        <div class="row align-items-center mb-5">
+            <div class="col-md-7 typewriter-box">
+                <h2 class="text-success">The Vision</h2>
+                <p id="typewriter3">In the future, Climate Wise plans to host local workshops and community clean-up events. We want to turn digital advocacy into real-world impact. Every small choice you make today helps build a cleaner tomorrow.</p>
+            </div>
+            <div class="col-md-5">
+                <img src="future.jpg" alt="Future" class="about-img">
+            </div>
+        </div>
+
     </div>
 
     <script>
-        /* Theme Toggle Logic */
+        /* Theme Toggle */
         const btn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
-
         btn.addEventListener('click', () => {
             const isDark = htmlElement.getAttribute('data-bs-theme') === 'dark';
             htmlElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
@@ -113,12 +122,12 @@
             btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
 
-        /* The Robust Typewriter Function */
+        /* Undertale Animation Logic */
         function playAnimation(elementId, speed, nextCallback) {
             const element = document.getElementById(elementId);
-            const fullText = element.innerHTML; // Capture text first
-            element.innerHTML = ""; // Now clear it
-            element.style.opacity = "1"; // Ensure it's visible
+            const fullText = element.innerHTML;
+            element.innerHTML = "";
+            element.style.opacity = "1";
             
             let charIndex = 0;
             function tick() {
@@ -133,12 +142,15 @@
             tick();
         }
 
-        // Run when the page is fully ready
         window.addEventListener('DOMContentLoaded', () => {
-            // Speed set to 5ms for super fast Undertale style
+            // Speed 5ms for fast typing
             playAnimation("typewriter1", 5, () => {
                 setTimeout(() => {
-                    playAnimation("typewriter2", 5);
+                    playAnimation("typewriter2", 5, () => {
+                        setTimeout(() => {
+                            playAnimation("typewriter3", 5);
+                        }, 300);
+                    });
                 }, 300); 
             });
         });
