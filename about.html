@@ -7,15 +7,13 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="favicon.png">
-
+    
     <style>
         :root {
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --header-bg: #2e7d32;
             --video-bg: #ffffff;
-            --accent-color: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
@@ -23,7 +21,6 @@
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
             --video-bg: #1e1e1e;
-            --accent-color: #4caf50;
         }
 
         body { 
@@ -32,16 +29,15 @@
             color: var(--text-color); 
             transition: 0.3s ease;
             margin: 0;
-            overflow-x: hidden;
+            overflow: hidden; /* Keeps it feeling like a presentation */
         }
 
         header { 
             background: var(--header-bg); 
             padding: 1rem 0; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-            position: sticky;
-            top: 0;
             z-index: 1000;
+            position: relative;
         }
 
         .navbar-container { 
@@ -53,78 +49,70 @@
             padding: 0 20px;
         }
 
-        /* Slide Logic Styles */
-        .slide-container {
-            min-height: 70vh;
+        /* Slide Styles */
+        .slide-wrapper {
+            height: calc(100vh - 100px);
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .info-slide {
-            display: none; /* Hidden by default */
+            display: none;
             width: 100%;
-            animation: fadeIn 0.5s ease-in-out;
+            max-width: 900px;
+            animation: slideIn 0.4s ease-out;
         }
 
-        .info-slide.active {
-            display: block;
-        }
+        .info-slide.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .about-img {
             width: 100%;
-            height: 350px;
+            height: 300px;
             object-fit: cover;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .nav-controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-
+        /* Progress Bar */
         .progress-container {
-            position: fixed;
-            top: 90px; /* Below header */
+            position: absolute;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: rgba(0,0,0,0.1);
+            height: 6px;
+            background: rgba(255,255,255,0.2);
         }
 
         .progress-bar {
             height: 100%;
-            background: #2e7d32;
+            background: #ffc107; /* Bright yellow for visibility */
             width: 0%;
-            transition: 0.3s ease;
+            transition: width 0.4s ease;
+        }
+
+        /* Nav Controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
         }
 
         .calc-wrapper, .video-wrapper {
             background: var(--video-bg);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .result-box {
-            display: none;
-            padding: 20px;
-            border-radius: 15px;
-            background: #e8f5e9;
-            color: #1b5e20;
-            margin-top: 20px;
-            border: 2px solid #2e7d32;
         }
     </style>
 </head>
@@ -132,201 +120,114 @@
 
     <header>
         <div class="navbar-container">
-            <a href="index.html" class="logo">
-                <img src="logo-placeholder.png" alt="Climate Wise Logo">
-            </a>
-            <div class="nav-links d-flex align-items-center">
-                <a href="about.html" class="btn btn-light rounded-pill px-3 mx-1">About</a>
-                <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
-                <a href="games.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
-                <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
+            <a href="index.html" class="logo"><img src="logo-placeholder.png" alt="Logo" style="height:50px;"></a>
+            <div class="nav-links">
+                <a href="index.html" class="btn btn-outline-light rounded-pill px-3">Home</a>
+                <button class="btn btn-light rounded-pill px-3" id="themeToggler">Dark</button>
             </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="slideProgress"></div>
         </div>
     </header>
 
-    <div class="progress-container">
-        <div class="progress-bar" id="myBar"></div>
-    </div>
-
-    <div class="container slide-container py-5">
-        
-        <!-- Slide 1: Mission -->
-        <div class="info-slide active" id="slide0">
-            <div class="row align-items-center">
-                <div class="col-md-7">
-                    <h1 class="display-4 text-success fw-bold">Our Mission:</h1>
-                    <p class="lead">By the end of your time here on the website, we hope you not only find ways on how to lower your carbon footprint, but know exactly HOW you are making an impact! Before we get started, we must calculate your carbon footprint.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="placeholder-about.jpg" alt="Mission" class="about-img">
-                </div>
-            </div>
+    <div class="slide-wrapper">
+        <!-- Slide 1 -->
+        <div class="info-slide active">
+            <h1 class="display-4 text-success fw-bold">Our Mission</h1>
+            <p class="lead">We want you to understand your impact. A carbon footprint is the sum of all greenhouse gas emissions from your daily life.</p>
+            <img src="placeholder-about.jpg" class="about-img mt-3">
         </div>
 
-        <!-- Slide 2: Calculator -->
-        <div class="info-slide" id="slide1">
+        <!-- Slide 2 -->
+        <div class="info-slide">
             <div class="calc-wrapper">
-                <h2 class="text-success fw-bold mb-4">Quick Impact Calculator</h2>
-                <form id="carbonForm">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Transport?</label>
-                            <select class="form-select" id="transport">
-                                <option value="1">Walking/Bike</option>
-                                <option value="2">Public Transit</option>
-                                <option value="5">Car (Gasoline)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Diet?</label>
-                            <select class="form-select" id="diet">
-                                <option value="1">Vegan/Vegetarian</option>
-                                <option value="3">Mostly Chicken/Fish</option>
-                                <option value="6">Lots of Beef/Dairy</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Household size?</label>
-                            <input type="number" class="form-control" id="house" value="1" min="1">
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-success mt-4 rounded-pill px-4" onclick="calculateFootprint()">Calculate My Impact</button>
-                </form>
-                <div id="calcResult" class="result-box">
-                    <h4 id="resultTitle">Calculating...</h4>
-                    <p id="resultDesc"></p>
+                <h2 class="text-success fw-bold">Quick Impact Calculator</h2>
+                <div class="mb-3">
+                    <label class="form-label">Transport?</label>
+                    <select class="form-select" id="transport">
+                        <option value="1">Walking/Bike</option>
+                        <option value="5">Car (Gasoline)</option>
+                    </select>
                 </div>
+                <button class="btn btn-success rounded-pill" onclick="calculate()">Check Impact</button>
+                <div id="res" class="mt-3 fw-bold text-success"></div>
             </div>
         </div>
 
-        <!-- Slide 3: Site Maker -->
-        <div class="info-slide" id="slide2">
-            <div class="row align-items-center">
-                <div class="col-md-5">
-                    <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
-                </div>
-                <div class="col-md-7">
-                    <h2 class="text-success display-5">Site maker</h2>
-                    <p class="lead">I am Elijah Funches. I kinda made this site. This took me way too long to make, but I hope it helps you get Climate Wise!</p>
-                </div>
-            </div>
+        <!-- Slide 3 -->
+        <div class="info-slide">
+            <h2 class="text-success">Site Maker</h2>
+            <p class="lead">I am Elijah Funches. This site was created to help our community get Climate Wise!</p>
+            <img src="placeholder-me.jpg" class="about-img mt-3">
         </div>
 
-        <!-- Slide 4: Global Warming -->
-        <div class="info-slide" id="slide3">
-            <div class="row align-items-center">
-                <div class="col-md-7">
-                    <h2 class="text-success display-5">What is Global Warming?</h2>
-                    <p class="lead">Global warming is the rapid increase in Earth’s average surface temperature. It's not something that can disappear with a snap of your fingers. It causes wildfires, rising sea-levels, and droughts.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="warming-info.jpg" alt="Global Warming" class="about-img">
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: Causes -->
-        <div class="info-slide" id="slide4">
-            <div class="row align-items-center">
-                <div class="col-md-5">
-                    <img src="cause-info.jpg" alt="Causes" class="about-img">
-                </div>
-                <div class="col-md-7">
-                    <h2 class="text-success display-5">Who causes it?</h2>
-                    <p class="lead">It is largely driven by human activities like the burning of fossil fuels which releases greenhouse gases that trap heat in the atmosphere. Powering homes and businesses produces massive amounts of CO2.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Action -->
-        <div class="info-slide" id="slide5">
-            <div class="row align-items-center">
-                <div class="col-md-7">
-                    <h2 class="text-success display-5">Can we do anything?</h2>
-                    <p class="lead">Yes! We can switch to renewable sources (solar/wind), drive electric vehicles, and support sustainable local businesses. If we all work together, we can make a change.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="action-info.jpg" alt="Action" class="about-img">
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 7: Interview -->
-        <div class="info-slide" id="slide6">
+        <!-- Slide 4 -->
+        <div class="info-slide">
+            <h2 class="text-success">Expert Interview</h2>
             <div class="video-wrapper">
-                <h2 class="text-success fw-bold mb-3">Expert Interview</h2>
-                <div class="ratio ratio-16x9 shadow-lg">
-                    <iframe src="https://www.youtube.com/embed/UhuRp3VT0Lo" title="Carmen Ellis Interview" allowfullscreen></iframe>
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.youtube.com/embed/UhuRp3VT0Lo" allowfullscreen></iframe>
                 </div>
-                <p class="mt-3">Watch my interview with Carmen Ellis, Environmental Health Specialist, on how to lower your footprint!</p>
             </div>
         </div>
-
     </div>
 
-    <!-- Navigation Buttons -->
     <div class="nav-controls">
-        <button class="btn btn-secondary rounded-pill px-4" id="prevBtn" onclick="changeSlide(-1)">Previous</button>
-        <button class="btn btn-success rounded-pill px-4" id="nextBtn" onclick="changeSlide(1)">Next Slide</button>
+        <button class="btn btn-secondary rounded-pill px-4" id="prevBtn" onclick="moveSlide(-1)">Back</button>
+        <button class="btn btn-success rounded-pill px-4" id="nextBtn" onclick="moveSlide(1)">Next</button>
     </div>
 
     <script>
-        let currentSlide = 0;
+        let currentIdx = 0;
         const slides = document.querySelectorAll('.info-slide');
-        const progressBar = document.getElementById('myBar');
+        const progressBar = document.getElementById('slideProgress');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
 
-        function changeSlide(direction) {
-            slides[currentSlide].classList.remove('active');
+        function moveSlide(step) {
+            // Remove active class from current
+            slides[currentIdx].classList.remove('active');
             
-            currentSlide += direction;
+            currentIdx += step;
 
-            // Loop or hide buttons
-            if (currentSlide < 0) currentSlide = 0;
-            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
-
-            slides[currentSlide].classList.add('active');
-            
-            // Update Progress
-            const progress = ((currentSlide + 1) / slides.length) * 100;
-            progressBar.style.width = progress + "%";
-
-            // Button Visibility
-            document.getElementById('prevBtn').style.visibility = (currentSlide === 0) ? "hidden" : "visible";
-            document.getElementById('nextBtn').innerText = (currentSlide === slides.length - 1) ? "Finish" : "Next Slide";
-        }
-
-        // Initialize
-        document.getElementById('prevBtn').style.visibility = "hidden";
-        progressBar.style.width = (1 / slides.length * 100) + "%";
-
-        /* Calculator Logic */
-        function calculateFootprint() {
-            const transport = parseInt(document.getElementById('transport').value);
-            const diet = parseInt(document.getElementById('diet').value);
-            const house = parseInt(document.getElementById('house').value);
-            const total = (transport + diet) * (house > 4 ? 1.5 : 1);
-            const resultBox = document.getElementById('calcResult');
-            resultBox.style.display = "block";
-            
-            if (total <= 4) {
-                document.getElementById('resultTitle').innerText = "Low Carbon Footprint!";
-                document.getElementById('resultDesc').innerText = "Yo that's sick! Your choices are planet friendly.";
-            } else if (total <= 8) {
-                document.getElementById('resultTitle').innerText = "Moderate Footprint";
-                document.getElementById('resultDesc').innerText = "Doing okay, but small changes could help.";
-            } else {
-                document.getElementById('resultTitle').innerText = "High Carbon Footprint ⚠️";
-                document.getElementById('resultDesc').innerText = "Dude what are we doing? Big changes needed!";
+            // Loop back to start if finished
+            if (currentIdx >= slides.length) {
+                currentIdx = 0;
             }
+            if (currentIdx < 0) {
+                currentIdx = 0;
+            }
+
+            // Add active class to new
+            slides[currentIdx].classList.add('active');
+            
+            updateUI();
         }
 
-        /* Theme Toggle */
-        const btn = document.getElementById('themeToggler');
-        btn.addEventListener('click', () => {
+        function updateUI() {
+            // Progress Bar Calculation
+            const pct = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = pct + "%";
+
+            // Button Text/Visibility
+            prevBtn.style.visibility = (currentIdx === 0) ? "hidden" : "visible";
+            nextBtn.innerText = (currentIdx === slides.length - 1) ? "Restart" : "Next";
+        }
+
+        function calculate() {
+            const val = document.getElementById('transport').value;
+            document.getElementById('res').innerText = val > 1 ? "⚠️ High Impact" : "✅ Low Impact";
+        }
+
+        // Theme Toggle
+        document.getElementById('themeToggler').onclick = () => {
             const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
             document.documentElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
-            btn.innerHTML = isDark ? "Dark" : "Light";
-        });
+        };
+
+        // Initialize UI
+        updateUI();
     </script>
 </body>
 </html>
