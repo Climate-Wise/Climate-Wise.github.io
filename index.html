@@ -18,6 +18,7 @@
             --text-color: #333333;
             --header-bg: #2e7d32;
             --header-shadow: rgba(0, 0, 0, 0.2);
+            --leaf-color: rgba(46, 125, 50, 0.2);
         }
 
         [data-bs-theme="dark"] {
@@ -26,6 +27,7 @@
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
             --header-shadow: rgba(0, 0, 0, 0.5);
+            --leaf-color: rgba(76, 175, 80, 0.2);
         }
 
         body { 
@@ -36,6 +38,45 @@
             color: var(--text-color); 
             background-color: var(--bg-color);
             transition: 0.3s ease; 
+            overflow-x: hidden; /* Prevents horizontal scroll from leaves */
+        }
+
+        /* Leaf Animation Styles */
+        #leaf-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1; /* Behind everything */
+        }
+
+        .leaf {
+            position: absolute;
+            top: -50px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--leaf-color);
+            border-radius: 2px 15px; /* Leaf shape */
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         header { 
@@ -64,7 +105,6 @@
             transform: scale(1.05);
         }
 
-        /* Works Cited Button - Kept distinct but you can change this to match too if needed */
         .btn-cited {
             background-color: #00d1ff !important; 
             color: #000 !important;
@@ -88,6 +128,8 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: 0.3s ease;
+            position: relative;
+            z-index: 5;
         }
 
         h1 { 
@@ -110,6 +152,9 @@
 </head>
 <body>
 
+    <!-- Container for falling leaves -->
+    <div id="leaf-container"></div>
+
     <header>
         <div class="navbar-container">
             <a href="index.html" class="logo">
@@ -121,9 +166,7 @@
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
                 <a href="games.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
                 <a href="community.html" class="btn btn-warning rounded-pill px-3 mx-1 text-dark">Community</a>
-                
                 <a href="sources.html" class="btn btn-cited rounded-pill px-3 mx-1">Works Cited</a>
-                
                 <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
             </div>
         </div>
@@ -145,20 +188,51 @@
     </footer>
 
     <script>
-        const btn = document.getElementById('themeToggler');
+        /* Theme Toggle Logic */
+        const themeBtn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
 
-        btn.addEventListener('click', () => {
+        themeBtn.addEventListener('click', () => {
             if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
                 htmlElement.setAttribute('data-bs-theme', 'light');
-                btn.innerHTML = "Dark";
-                btn.className = "btn btn-light rounded-pill px-3 mx-1";
+                themeBtn.innerHTML = "Dark";
+                themeBtn.className = "btn btn-light rounded-pill px-3 mx-1";
             } else {
                 htmlElement.setAttribute('data-bs-theme', 'dark');
-                btn.innerHTML = "Light";
-                btn.className = "btn btn-outline-light rounded-pill px-3 mx-1";
+                themeBtn.innerHTML = "Light";
+                themeBtn.className = "btn btn-outline-light rounded-pill px-3 mx-1";
             }
         });
+
+        /* Leaf Animation Logic */
+        const leafContainer = document.getElementById('leaf-container');
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            
+            // Random horizontal position
+            leaf.style.left = Math.random() * 100 + 'vw';
+            
+            // Random size variation
+            const size = (Math.random() * 10 + 10) + 'px';
+            leaf.style.width = size;
+            leaf.style.height = size;
+
+            // Random fall duration (5 to 10 seconds)
+            const duration = Math.random() * 5 + 5;
+            leaf.style.animationDuration = duration + 's';
+
+            leafContainer.appendChild(leaf);
+
+            // Remove leaf from DOM after animation finishes
+            setTimeout(() => {
+                leaf.remove();
+            }, duration * 1000);
+        }
+
+        // Generate a new leaf every 400ms
+        setInterval(createLeaf, 400);
     </script>
 
 </body>
