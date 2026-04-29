@@ -1,44 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community | Climate Wise</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background: #f4f4f4; text-align: center; }
-        header { background: #2e7d32; color: white; padding: 1rem; }
-        nav { margin-top: 10px; }
-        nav a { color: white; margin: 0 10px; text-decoration: none; font-size: 0.9rem; }
-        .container { max-width: 900px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; }
-        iframe { border: none; width: 100%; min-height: 500px; margin-bottom: 30px; }
-        h2 { color: #2e7d32; }
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333333;
+            --header-bg: #2e7d32;
+            --card-bg: #ffffff;
+        }
+
+        [data-bs-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #f8f9fa;
+            --header-bg: #1b4d1f;
+            --card-bg: #1e1e1e;
+        }
+
+        body { 
+            font-family: 'Fredoka', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: 0.3s ease;
+            margin: 0;
+        }
+
+        header { 
+            background: var(--header-bg); 
+            padding: 1rem 0; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1100px; 
+            margin: auto; 
+            padding: 0 20px;
+        }
+
+        .logo img { height: 60px; }
+
+        .container { 
+            max-width: 900px; 
+            margin: 40px auto; 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        iframe { 
+            border: none; 
+            width: 100%; 
+            border-radius: 10px;
+            background: white; /* Keeps the form readable in dark mode */
+        }
+
+        h2 { color: #2e7d32; font-weight: 600; }
+        
+        .btn-home {
+            text-decoration: none;
+            color: #2e7d32;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Climate Wise</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="community.html"><b>Community</b></a>
-        </nav>
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <img src="logo-placeholder.png" alt="Climate Wise Logo">
+            </a>
+            <div class="nav-links d-flex align-items-center">
+                <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
+                <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
+                <a href="game.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Games</a>
+                <a href="community.html" class="btn btn-light rounded-pill px-3 mx-1">Community</a>
+                <button class="btn btn-light rounded-pill px-3 mx-1" id="themeToggler">Dark</button>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <h2>Reflection</h2>
-        <p>After you finish reading, please take the time to complete this reflection form:</p>
+    <div class="container text-center">
+        <h2 class="mb-3">Reflection</h2>
+        <p class="mb-4">After you finish reading, please take the time to complete this reflection form:</p>
         
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdNQEn7itwOsyo7U0X1MrJEneoyxNkgpIw9DlOKPwAfXet4SQ/viewform?usp=publish-editor" width="640" height="600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        <div class="shadow-sm p-2 rounded bg-white">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdNQEn7itwOsyo7U0X1MrJEneoyxNkgpIw9DlOKPwAfXet4SQ/viewform?embedded=true" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
 
-        <hr>
-
-        <h2>Recent Discussion</h2>
-        <p>See what others in the Climate Wise community are saying:</p>
-
-        <iframe src="YOUR_GOOGLE_SHEET_LINK_HERE"></iframe>
+        <div class="mt-5">
+            <a href="index.html" class="btn-home">← Back to Home</a>
+        </div>
     </div>
 
-    <p><a href="index.html">Back to Home</a></p>
-
+    <script>
+        /* Theme Toggle */
+        const btn = document.getElementById('themeToggler');
+        const htmlElement = document.documentElement;
+        btn.addEventListener('click', () => {
+            const isDark = htmlElement.getAttribute('data-bs-theme') === 'dark';
+            htmlElement.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+            btn.innerHTML = isDark ? "Dark" : "Light";
+            btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
+        });
+    </script>
 </body>
 </html>
