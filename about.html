@@ -15,6 +15,7 @@
             --text-color: #333333;
             --header-bg: #2e7d32;
             --video-bg: #ffffff;
+            --accent-color: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
@@ -22,6 +23,7 @@
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
             --video-bg: #1e1e1e;
+            --accent-color: #4caf50;
         }
 
         body { 
@@ -64,7 +66,7 @@
         
         .typewriter-box { min-height: 100px; }
 
-        .video-wrapper {
+        .video-wrapper, .calc-wrapper {
             background: var(--video-bg);
             border-radius: 20px;
             padding: 30px;
@@ -77,12 +79,26 @@
             overflow: hidden;
         }
 
-        /* Citation Style */
         .citation-text {
             font-size: 0.85rem;
             opacity: 0.7;
             margin-top: 8px;
             font-style: italic;
+        }
+
+        /* Calculator Specific Styles */
+        .result-box {
+            display: none;
+            padding: 20px;
+            border-radius: 15px;
+            background: #e8f5e9;
+            color: #1b5e20;
+            margin-top: 20px;
+            border: 2px solid #2e7d32;
+        }
+        [data-bs-theme="dark"] .result-box {
+            background: #1b5e20;
+            color: #e8f5e9;
         }
     </style>
 </head>
@@ -112,6 +128,39 @@
             </div>
             <div class="col-md-5">
                 <img src="placeholder-about.jpg" alt="Mission" class="about-img">
+            </div>
+        </div>
+
+        <div class="calc-wrapper mb-5" id="calcSection">
+            <h2 class="text-success fw-bold mb-4">Quick Impact Calculator</h2>
+            <form id="carbonForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Main mode of transport?</label>
+                        <select class="form-select" id="transport">
+                            <option value="1">Walking/Bike</option>
+                            <option value="2">Public Transit</option>
+                            <option value="5">Car (Gasoline)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">What is your diet like?</label>
+                        <select class="form-select" id="diet">
+                            <option value="1">Vegan/Vegetarian</option>
+                            <option value="3">Mostly Chicken/Fish</option>
+                            <option value="6">Lots of Beef/Dairy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Household size?</label>
+                        <input type="number" class="form-control" id="house" value="1" min="1">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success mt-4 rounded-pill px-4" onclick="calculateFootprint()">Calculate My Impact</button>
+            </form>
+            <div id="calcResult" class="result-box">
+                <h4 id="resultTitle">Calculating...</h4>
+                <p id="resultDesc"></p>
             </div>
         </div>
 
@@ -175,6 +224,32 @@
     </div>
 
     <script>
+        /* Calculator Logic */
+        function calculateFootprint() {
+            const transport = parseInt(document.getElementById('transport').value);
+            const diet = parseInt(document.getElementById('diet').value);
+            const house = parseInt(document.getElementById('house').value);
+            
+            // Basic logic: Higher points = higher footprint
+            const total = (transport + diet) * (house > 4 ? 1.5 : 1);
+            const resultBox = document.getElementById('calcResult');
+            const title = document.getElementById('resultTitle');
+            const desc = document.getElementById('resultDesc');
+            
+            resultBox.style.display = "block";
+            
+            if (total <= 4) {
+                title.innerText = "Low Carbon Footprint! 🌱";
+                desc.innerText = "Awesome job! Your lifestyle choices are very planet-friendly. Keep leading the way.";
+            } else if (total <= 8) {
+                title.innerText = "Moderate Footprint 👣";
+                desc.innerText = "You're doing okay, but there are small changes (like eating more plant-based meals) that could help lower your impact.";
+            } else {
+                title.innerText = "High Carbon Footprint ⚠️";
+                desc.innerText = "Your choices contribute significantly to CO2 emissions. Consider carpooling or switching energy sources!";
+            }
+        }
+
         /* Theme Toggle */
         const btn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
@@ -185,7 +260,7 @@
             btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
 
-        /* Undertale Animation Logic */
+        /* Animation Logic */
         function playAnimation(elementId, speed, nextCallback) {
             const element = document.getElementById(elementId);
             if (!element) return;
@@ -207,7 +282,6 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Sequential Animation Chain
             playAnimation("typewriter1", 5, () => {
                 playAnimation("typewriter2", 5, () => {
                     playAnimation("typewriter_warming", 5, () => {
