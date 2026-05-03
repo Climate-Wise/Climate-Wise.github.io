@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
@@ -8,6 +7,7 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
@@ -16,6 +16,7 @@
             --text-color: #333333;
             --header-bg: #2e7d32;
             --card-bg: #ffffff;
+            --accent: #2e7d32;
         }
 
         [data-bs-theme="dark"] {
@@ -23,6 +24,7 @@
             --text-color: #f8f9fa;
             --header-bg: #1b4d1f;
             --card-bg: #1e1e1e;
+            --accent: #4caf50;
         }
 
         body { 
@@ -55,36 +57,33 @@
 
         .section-padding { padding: 60px 0; }
 
-        /* Coloring Card Styles */
-        .coloring-card {
+        /* General Card Styles */
+        .resource-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 20px;
-            text-align: center;
+            padding: 25px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .coloring-card:hover {
+        .resource-card:hover {
             transform: translateY(-5px);
         }
 
         .coloring-preview {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: contain;
             background: #eee;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
         }
 
-        .btn-print {
-            background-color: #2e7d32;
+        .btn-green {
+            background-color: var(--accent);
             color: white;
             border-radius: 50px;
             font-weight: 600;
@@ -92,12 +91,29 @@
             text-decoration: none;
             display: inline-block;
             transition: 0.3s;
+            border: none;
         }
 
-        .btn-print:hover {
+        .btn-green:hover {
             background-color: #1b4d1f;
             color: white;
-            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+            transform: scale(1.05);
+        }
+
+        .glossary-term {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .badge-eco {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #2e7d32;
+        }
+
+        [data-bs-theme="dark"] .badge-eco {
+            background-color: #1b4d1f;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -120,47 +136,139 @@
 
     <div class="container section-padding">
         <div class="text-center mb-5">
+            <span class="badge badge-eco rounded-pill px-3 py-2 mb-2">FREE DOWNLOADS</span>
             <h1 class="display-4 text-success fw-bold">Learning Resources</h1>
-            <p class="lead">Download and print these activities and have fun!</p>
+            <p class="lead">Everything you need to become a Climate Hero, from coloring pages to fact sheets.</p>
         </div>
 
-        <h2 class="text-success mb-4 border-bottom pb-2">Coloring Station</h2>
-        
+        <div class="resource-card mb-5 bg-success text-white p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-leaf me-2"></i> This Week's Green Challenge</h3>
+                    <p>Can you go "Meatless for a Day"? Reducing meat consumption just once a week significantly lowers your carbon footprint! Check it off once you finish.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="form-check d-inline-block text-start">
+                        <input class="form-check-input" type="checkbox" id="challengeCheck" style="transform: scale(2);">
+                        <label class="form-check-label ms-3 fw-bold" for="challengeCheck">Challenge Accepted!</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-success mb-4 border-bottom pb-2"><i class="fas fa-palette me-2"></i> Coloring Station</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="resource-card text-center">
+                    <img src="https://www.teacherlists.com/blog/wp-content/uploads/2021/01/0121-teacherlists-learning-library-carbon-footprint-coloring-page.pdf" alt="Carbon Footprint Preview" class="coloring-preview">
+                    <h5>Carbon Footprint Tracker</h5>
+                    <p class="small text-muted">A fun way to visualize your daily impact with a giant foot!</p>
+                    <a href="https://www.teacherlists.com/blog/wp-content/uploads/2021/01/0121-teacherlists-learning-library-carbon-footprint-coloring-page.pdf" target="_blank" class="btn-green">Print Sheet</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="resource-card text-center">
+                    <img src="https://smoothdraw.com/wp-content/uploads/cute-earth-coloring-page.pdf" alt="Cute Earth Preview" class="coloring-preview">
+                    <h5>Happy Earth</h5>
+                    <p class="small text-muted">A cute coloring page for the youngins' to learn about Earth Day.</p>
+                    <a href="https://smoothdraw.com/wp-content/uploads/cute-earth-coloring-page.pdf" target="_blank" class="btn-green">Print Sheet</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="resource-card text-center">
+                    <img src="https://smoothdraw.com/wp-content/uploads/Earth-with-wind-turbines.pdf" alt="Wind Turbine Preview" class="coloring-preview">
+                    <h5>Clean Energy Future</h5>
+                    <p class="small text-muted">Featuring wind turbines and green energy for the true sigmas.</p>
+                    <a href="https://smoothdraw.com/wp-content/uploads/Earth-with-wind-turbines.pdf" target="_blank" class="btn-green">Print Sheet</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-success mb-4 border-bottom pb-2"><i class="fas fa-laptop-code me-2"></i> Digital Tools & Tools</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="resource-card">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-calculator fa-3x text-success me-4"></i>
+                        <div>
+                            <h5>Official Footprint Calculator</h5>
+                            <p>Go deeper than our site game! Use the Global Footprint Network's calculator to see exactly how many Earths it would take to support your lifestyle.</p>
+                            <a href="https://www.footprintcalculator.org/" target="_blank" class="btn btn-outline-success rounded-pill">Launch Tool</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="resource-card">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-globe-americas fa-3x text-info me-4"></i>
+                        <div>
+                            <h5>NASA Climate Kids</h5>
+                            <p>The best place for interactive games, videos, and articles created by the scientists at NASA. Perfect for quick learning sessions.</p>
+                            <a href="https://climatekids.nasa.gov/" target="_blank" class="btn btn-outline-info rounded-pill">Explore NASA</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="resource-card bg-light">
+                    <h2 class="text-success mb-4"><i class="fas fa-book-open me-2"></i> Climate Glossary</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Greenhouse Effect:</span> When gases trap heat in Earth's atmosphere, keeping it warm like a blanket.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Renewable Energy:</span> Energy from sources that don't run out, like the sun (solar) or wind.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Net Zero:</span> Balancing the amount of greenhouse gas produced with the amount removed from the atmosphere.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Biodiversity:</span> The variety of all the different kinds of organisms (plants, animals, etc.) in an area.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Composting:</span> Turning food scraps into nutrient-rich soil instead of throwing them in the trash.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <p><span class="glossary-term">Sustainable:</span> Living in a way that doesn't use up all the resources for the people in the future.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-success mb-4 border-bottom pb-2"><i class="fas fa-list-ul me-2"></i> Recommended Reading</h2>
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="coloring-card">
-                    <div>
-                        <img src="https://www.teacherlists.com/blog/wp-content/uploads/2021/01/0121-teacherlists-learning-library-carbon-footprint-coloring-page.pdf" alt="Carbon Footprint Preview" class="coloring-preview">
-                        <h5>Carbon Footprint Tracker</h5>
-                        <p class="small text-muted">A fun way to visualize your daily impact with a giant foot!</p>
-                    </div>
-                    <a href="https://www.teacherlists.com/blog/wp-content/uploads/2021/01/0121-teacherlists-learning-library-carbon-footprint-coloring-page.pdf" target="_blank" class="btn-print">Print Sheet</a>
+                <div class="resource-card">
+                    <h6 class="text-uppercase text-muted">Ages 5-10</h6>
+                    <h5>"The Lorax"</h5>
+                    <p>By Dr. Seuss. A classic tale about the importance of speaking for the trees and the dangers of corporate greed.</p>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="coloring-card">
-                    <div>
-                        <img src="https://smoothdraw.com/wp-content/uploads/cute-earth-coloring-page.pdf" alt="Cute Earth Preview" class="coloring-preview">
-                        <h5>Happy Earth</h5>
-                        <p class="small text-muted">A cute coloring page for youngins'</p>
-                    </div>
-                    <a href="https://smoothdraw.com/wp-content/uploads/cute-earth-coloring-page.pdf" target="_blank" class="btn-print">Print Sheet</a>
+                <div class="resource-card">
+                    <h6 class="text-uppercase text-muted">Ages 11-15</h6>
+                    <h5>"No One Is Too Small to Make a Difference"</h5>
+                    <p>A collection of speeches by Greta Thunberg that inspired the world-wide youth climate strike movement.</p>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="coloring-card">
-                    <div>
-                        <img src="https://smoothdraw.com/wp-content/uploads/Earth-with-wind-turbines.pdf" alt="Wind Turbine Preview" class="coloring-preview">
-                        <h5>Clean Energy Earth</h5>
-                        <p class="small text-muted">Featuring wind turbines and green energy for sigmas.</p>
-                    </div>
-                    <a href="https://smoothdraw.com/wp-content/uploads/Earth-with-wind-turbines.pdf" target="_blank" class="btn-print">Print Sheet</a>
+                <div class="resource-card">
+                    <h6 class="text-uppercase text-muted">Documentary</h6>
+                    <h5>"Our Planet" (Netflix)</h5>
+                    <p>Narrated by David Attenborough, this series shows how climate change affects all living creatures across the globe.</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p class="mb-0">© 2023 Climate Wise - Stay Green, Stay Sigma.</p>
+    </footer>
 
     <script>
         /* Theme Toggle */
