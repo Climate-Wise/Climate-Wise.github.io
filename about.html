@@ -93,6 +93,29 @@
             color: var(--accent-color);
         }
 
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            display: none; /* Hidden by default */
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        #backToTop:hover {
+            background-color: #1b5e20;
+        }
+
         .typewriter-box { min-height: 100px; }
 
         .video-wrapper, .calc-wrapper {
@@ -132,7 +155,9 @@
 </head>
 <body>
 
-    <header>
+    <button id="backToTop" title="Go to top">↑</button>
+
+    <header id="top">
         <div class="navbar-container">
             <a href="index.html" class="logo">
                 <img src="logo-placeholder.png" alt="Climate Wise Logo">
@@ -284,6 +309,23 @@
     </div>
 
     <script>
+        /* Back to Top Logic */
+        let mybutton = document.getElementById("backToTop");
+
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        mybutton.addEventListener("click", function(){
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
         /* Calculator Logic */
         function calculateFootprint() {
             const transport = parseInt(document.getElementById('transport').value);
