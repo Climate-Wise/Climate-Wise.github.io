@@ -92,7 +92,6 @@
             margin-right: 10px;
         }
 
-        /* Streak Styling */
         .streak-container {
             display: none;
             text-align: center;
@@ -120,11 +119,28 @@
         .upgrade-btn { width: 100%; text-align: left; margin-bottom: 8px; font-size: 0.85rem; }
         .scroll-box { height: 400px; overflow-y: auto; padding-right: 10px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 10px; }
         .rank-banner { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; }
+        
+        /* Cheat Message */
+        #cheatNotify {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffc107;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 
 <body>
 
+    <div id="cheatNotify">⚠️ CHEAT ACTIVATED: INFINITE COINS ⚠️</div>
     <button id="backToTop" title="Go to top">↑</button>
 
     <header id="top">
@@ -161,7 +177,7 @@
 
                     <div class="row">
                         <div class="col-md-7 border-end">
-                            <h4 id="questionText" class="text-success fw-bold">Question goes here?</h4>
+                            <h4 id="questionText" class="text-success fw-bold">Loading...</h4>
                             <div id="optionsContainer" class="d-grid gap-2 mt-4"></div>
                             <div id="gameMsg" class="mt-3 fw-bold text-center"></div>
                         </div>
@@ -186,43 +202,67 @@
 
         const rawQuestions = [
             { q: "What is the primary cause of global warming?", a: "Burning fossil fuels", b: "Volcanic eruptions", c: "Natural cycles" },
-            { q: "Which gas is most commonly associated with the greenhouse effect?", a: "Carbon Dioxide", b: "Oxygen", c: "Helium" },
-            { q: "What is a 'Carbon Footprint'?", a: "Total emissions caused by an individual", b: "A literal footprint in coal", c: "The size of a carbon atom" },
-            { q: "Which diet generally has the lowest carbon impact?", a: "Plant-based (Vegan)", b: "Pescatarian", c: "Meat-heavy" },
-            { q: "What does 'Renewable Energy' mean?", a: "Energy from infinite sources like wind", b: "Reusing old batteries", c: "Burning wood" },
-            { q: "Which sector emits the most greenhouse gases globally?", a: "Energy & Electricity", b: "Fashion", c: "Art" },
-            { q: "What is the benefit of composting?", a: "Reduces methane from landfills", b: "It smells nice", c: "It creates more plastic" },
-            { q: "Which of these is a 'Single-Use' plastic?", a: "Plastic straw", b: "Reusable water bottle", c: "Glass jar" },
-            { q: "How much of the Earth's water is fresh and accessible?", a: "Less than 1%", b: "50%", c: "10%" },
+            { q: "Which gas is associated with the greenhouse effect?", a: "Carbon Dioxide", b: "Oxygen", c: "Helium" },
+            { q: "What is a 'Carbon Footprint'?", a: "Total emissions caused by an individual", b: "A literal footprint in coal", c: "Size of an atom" },
+            { q: "Which diet has the lowest carbon impact?", a: "Plant-based (Vegan)", b: "Pescatarian", c: "Meat-heavy" },
+            { q: "What does 'Renewable Energy' mean?", a: "Sources like wind and solar", b: "Reusing batteries", c: "Burning wood" },
+            { q: "Which sector emits the most gases?", a: "Energy & Electricity", b: "Fashion", c: "Art" },
+            { q: "Composting helps by...", a: "Reducing methane in landfills", b: "Smelling like flowers", c: "Making plastic" },
+            { q: "Which is single-use?", a: "Plastic straw", b: "Metal bottle", c: "Glass jar" },
+            { q: "Access to fresh water globally is...", a: "Less than 1%", b: "50%", c: "10%" },
         ];
 
-        // Fill to 50 for logic
+        // Filler questions
         for(let i=10; i<=50; i++) {
             rawQuestions.push({ q: `Eco Challenge #${i}: Sustainability is...`, a: "Crucial for our future", b: "Optional", c: "Bad for plants" });
         }
 
         const upgrades = [
             { name: "Bamboo Toothbrush", cost: 10, power: 1 },
-            { name: "LED Light Conversion", cost: 50, power: 4 },
+            { name: "LED Conversion", cost: 50, power: 4 },
             { name: "Backyard Compost", cost: 200, power: 12 },
-            { name: "Low-Flow Showerheads", cost: 500, power: 30 },
+            { name: "Low-Flow Shower", cost: 500, power: 30 },
             { name: "Smart Thermostat", cost: 1200, power: 75 },
             { name: "Energy Audit", cost: 3000, power: 180 },
             { name: "Hybrid Bike", cost: 7000, power: 450 },
             { name: "Solar Panels", cost: 15000, power: 1000 },
-            { name: "Rooftop Solar Array", cost: 100000, power: 6500 },
-            { name: "Electric Commuter Car", cost: 600000, power: 40000 },
+            { name: "Battery Wall", cost: 40000, power: 2500 },
+            { name: "Rooftop Solar", cost: 100000, power: 6500 },
+            { name: "Community Garden", cost: 250000, power: 15000 },
+            { name: "Electric Commuter", cost: 600000, power: 40000 },
             { name: "Local Wind Turbine", cost: 1500000, power: 100000 },
+            { name: "Geothermal Heat", cost: 4000000, power: 280000 },
+            { name: "Air Carbon Filter", cost: 10000000, power: 750000 },
+            { name: "Reforestation Drone", cost: 25000000, power: 2000000 },
+            { name: "Ocean Cleanup", cost: 75000000, power: 6000000 },
+            { name: "Green Hydrogen", cost: 200000000, power: 18000000 },
+            { name: "Carbon Capture Tower", cost: 500000000, power: 50000000 },
             { name: "Global Grid Sync", cost: 1000000000, power: 150000000 }
         ];
 
+        /* CHEAT CODE LOGIC */
+        let cheatSequence = [];
+        const secretCode = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+        window.addEventListener('keydown', (e) => {
+            cheatSequence.push(e.code);
+            cheatSequence = cheatSequence.slice(-4); // Keep last 4 keys
+
+            if (JSON.stringify(cheatSequence) === JSON.stringify(secretCode)) {
+                coins = 999999999999999;
+                updateDisplay();
+                const notify = document.getElementById('cheatNotify');
+                notify.style.display = "block";
+                setTimeout(() => notify.style.display = "none", 3000);
+            }
+        });
+
         function showQuestion() {
             if (currentQ >= 50) {
-                document.getElementById('questionText').innerText = "Congratulations! You've mastered all 50 challenges.";
+                document.getElementById('questionText').innerText = "Congratulations! Earth is Safe!";
                 document.getElementById('optionsContainer').innerHTML = "";
                 return;
             }
-            
             const qData = rawQuestions[currentQ];
             document.getElementById('questionText').innerText = qData.q;
             document.getElementById('qCount').innerText = currentQ + 1;
@@ -243,23 +283,17 @@
                 btn.onclick = () => {
                     if (choice.correct) {
                         streak++;
-                        let multiplier = 1;
-                        if(streak >= 12) multiplier = 5;
-                        else if(streak >= 7) multiplier = 3;
-                        else if(streak >= 3) multiplier = 2;
-
-                        coins += (1 * multiplier);
+                        let mult = streak >= 12 ? 5 : (streak >= 7 ? 3 : (streak >= 3 ? 2 : 1));
+                        coins += mult;
                         currentQ++;
-                        
-                        document.getElementById('gameMsg').innerText = `Correct! +${multiplier} Coins`;
+                        document.getElementById('gameMsg').innerText = `Correct! +${mult} Coins`;
                         document.getElementById('gameMsg').className = "mt-3 fw-bold text-center text-success";
-                        
-                        updateStreakUI(multiplier);
+                        updateStreakUI(mult);
                         updateRank();
                         showQuestion();
                     } else {
                         streak = 0;
-                        document.getElementById('gameMsg').innerText = "Wrong! Streak Lost!";
+                        document.getElementById('gameMsg').innerText = "Wrong!";
                         document.getElementById('gameMsg').className = "mt-3 fw-bold text-center text-danger";
                         updateStreakUI(1);
                     }
@@ -270,21 +304,14 @@
         }
 
         function updateStreakUI(mult) {
-            const streakBox = document.getElementById('streakBox');
-            const streakNum = document.getElementById('streakNum');
-            const multNum = document.getElementById('multNum');
-            const fireIcons = document.getElementById('fireIcons');
-
+            const box = document.getElementById('streakBox');
             if (streak >= 3) {
-                streakBox.style.display = "block";
-                streakNum.innerText = streak;
-                multNum.innerText = `x${mult}`;
-                
-                if (streak >= 12) fireIcons.innerText = "⚡🔥⚡";
-                else if (streak >= 7) fireIcons.innerText = "🔥🔥";
-                else fireIcons.innerText = "🔥";
+                box.style.display = "block";
+                document.getElementById('streakNum').innerText = streak;
+                document.getElementById('multNum').innerText = `x${mult}`;
+                document.getElementById('fireIcons').innerText = streak >= 12 ? "⚡🔥⚡" : (streak >= 7 ? "🔥🔥" : "🔥");
             } else {
-                streakBox.style.display = "none";
+                box.style.display = "none";
             }
         }
 
@@ -294,7 +321,7 @@
             upgrades.forEach((u, i) => {
                 const btn = document.createElement('button');
                 btn.className = "btn btn-outline-secondary upgrade-btn";
-                btn.innerHTML = `<strong>${u.name}</strong><br>Cost: ${Math.floor(u.cost)} | +${u.power} CPS`;
+                btn.innerHTML = `<strong>${u.name}</strong><br>Cost: ${Math.floor(u.cost).toLocaleString()} | +${u.power.toLocaleString()} CPS`;
                 btn.onclick = () => {
                     if (coins >= u.cost) {
                         coins -= u.cost;
@@ -309,13 +336,13 @@
         }
 
         function updateRank() {
-            let rankIndex = Math.min(Math.floor(currentQ / 8), ranks.length - 1);
-            document.getElementById('userRank').innerText = "Rank: " + ranks[rankIndex];
+            let idx = Math.min(Math.floor(currentQ / 8), ranks.length - 1);
+            document.getElementById('userRank').innerText = "Rank: " + ranks[idx];
         }
 
         function updateDisplay() {
-            document.getElementById('coinCount').innerText = Math.floor(coins);
-            document.getElementById('cpsCount').innerText = cps;
+            document.getElementById('coinCount').innerText = Math.floor(coins).toLocaleString();
+            document.getElementById('cpsCount').innerText = cps.toLocaleString();
         }
 
         document.getElementById('themeToggler').onclick = () => {
@@ -323,12 +350,6 @@
             const isDark = html.getAttribute('data-bs-theme') === 'dark';
             html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
         };
-
-        window.onscroll = () => {
-            document.getElementById("backToTop").style.display = 
-                (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "block" : "none";
-        };
-        document.getElementById("backToTop").onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
         setInterval(() => { coins += cps; updateDisplay(); }, 1000);
         renderUpgrades();
