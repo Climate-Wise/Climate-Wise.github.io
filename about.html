@@ -304,8 +304,10 @@
                     </div>
                 </div>
             </div>
+            <a href="#slide8" class="next-arrow">↓</a>
         </div>
-<!-- SLIDE 8: VISIT US / QR CODE -->
+
+        <!-- SLIDE 8: VISIT US / QR CODE -->
         <div class="section-padding" id="slide8">
             <span class="page-indicator">Page 8</span>
             <div class="row align-items-center mb-5">
@@ -322,6 +324,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -404,7 +407,9 @@
                     playAnimation("typewriter_warming", 5, () => {
                         playAnimation("typewriter_cause", 5, () => {
                             playAnimation("typewriter_action", 5, () => {
-                                playAnimation("typewriter3", 5);
+                                playAnimation("typewriter3", 5, () => {
+                                    playAnimation("typewriter_qr", 5);
+                                });
                             });
                         });
                     });
