@@ -80,6 +80,7 @@
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         .stat-badge {
@@ -89,6 +90,31 @@
             border-radius: 10px;
             font-weight: bold;
             margin-right: 10px;
+        }
+
+        /* Streak Styling */
+        .streak-container {
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .streak-fire {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px orange);
+        }
+
+        .multiplier-tag {
+            font-weight: bold;
+            color: #ff5722;
+            font-size: 1.2rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .upgrade-btn { width: 100%; text-align: left; margin-bottom: 8px; font-size: 0.85rem; }
@@ -119,6 +145,12 @@
         <div class="row justify-content-center">
             <div class="col-lg-11">
                 <div class="game-card">
+                    
+                    <div id="streakBox" class="streak-container">
+                        <div class="streak-fire"><span id="fireIcons">🔥</span> <span id="streakNum">0</span></div>
+                        <div class="multiplier-tag">BONUS: <span id="multNum">x1</span> COINS</div>
+                    </div>
+
                     <div class="rank-banner" id="userRank">Rank: Carbon Amateur</div>
 
                     <div class="d-flex flex-wrap justify-content-center mb-4">
@@ -148,6 +180,7 @@
         let coins = 0;
         let cps = 0;
         let currentQ = 0;
+        let streak = 0;
 
         const ranks = ["Carbon Amateur", "Eco-Scout", "Green Guardian", "Sustainability Specialist", "Planet Protector", "Climate Hero", "Earth Legend"];
 
@@ -160,13 +193,11 @@
             { q: "Which sector emits the most greenhouse gases globally?", a: "Energy & Electricity", b: "Fashion", c: "Art" },
             { q: "What is the benefit of composting?", a: "Reduces methane from landfills", b: "It smells nice", c: "It creates more plastic" },
             { q: "Which of these is a 'Single-Use' plastic?", a: "Plastic straw", b: "Reusable water bottle", c: "Glass jar" },
-            { q: "What does the 'R' in HVAC stand for?", a: "Actually, it's Refrigeration", b: "Rain", c: "Radical" },
             { q: "How much of the Earth's water is fresh and accessible?", a: "Less than 1%", b: "50%", c: "10%" },
-            // ... (I will keep the logic handling 50, showing how they shuffle)
         ];
 
-        // Fill to 50 for the logic
-        for(let i=11; i<=50; i++) {
+        // Fill to 50 for logic
+        for(let i=10; i<=50; i++) {
             rawQuestions.push({ q: `Eco Challenge #${i}: Sustainability is...`, a: "Crucial for our future", b: "Optional", c: "Bad for plants" });
         }
 
@@ -178,18 +209,10 @@
             { name: "Smart Thermostat", cost: 1200, power: 75 },
             { name: "Energy Audit", cost: 3000, power: 180 },
             { name: "Hybrid Bike", cost: 7000, power: 450 },
-            { name: "Solar Water Heater", cost: 15000, power: 1000 },
-            { name: "Home Battery Wall", cost: 40000, power: 2500 },
+            { name: "Solar Panels", cost: 15000, power: 1000 },
             { name: "Rooftop Solar Array", cost: 100000, power: 6500 },
-            { name: "Community Garden", cost: 250000, power: 15000 },
             { name: "Electric Commuter Car", cost: 600000, power: 40000 },
             { name: "Local Wind Turbine", cost: 1500000, power: 100000 },
-            { name: "Geothermal Heating", cost: 4000000, power: 280000 },
-            { name: "Industrial Air Filter", cost: 10000000, power: 750000 },
-            { name: "Reforestation Drone", cost: 25000000, power: 2000000 },
-            { name: "Ocean Plastic Collector", cost: 75000000, power: 6000000 },
-            { name: "Green Hydrogen Plant", cost: 200000000, power: 18000000 },
-            { name: "Carbon Capture Tower", cost: 500000000, power: 50000000 },
             { name: "Global Grid Sync", cost: 1000000000, power: 150000000 }
         ];
 
@@ -204,7 +227,6 @@
             document.getElementById('questionText').innerText = qData.q;
             document.getElementById('qCount').innerText = currentQ + 1;
 
-            // Create choices and shuffle them
             let choices = [
                 { text: qData.a, correct: true },
                 { text: qData.b, correct: false },
@@ -220,20 +242,50 @@
                 btn.innerText = choice.text;
                 btn.onclick = () => {
                     if (choice.correct) {
-                        coins += 1;
+                        streak++;
+                        let multiplier = 1;
+                        if(streak >= 12) multiplier = 5;
+                        else if(streak >= 7) multiplier = 3;
+                        else if(streak >= 3) multiplier = 2;
+
+                        coins += (1 * multiplier);
                         currentQ++;
-                        document.getElementById('gameMsg').innerText = "Correct! +1 Coin";
+                        
+                        document.getElementById('gameMsg').innerText = `Correct! +${multiplier} Coins`;
                         document.getElementById('gameMsg').className = "mt-3 fw-bold text-center text-success";
+                        
+                        updateStreakUI(multiplier);
                         updateRank();
                         showQuestion();
                     } else {
-                        document.getElementById('gameMsg').innerText = "Wrong! Try again.";
+                        streak = 0;
+                        document.getElementById('gameMsg').innerText = "Wrong! Streak Lost!";
                         document.getElementById('gameMsg').className = "mt-3 fw-bold text-center text-danger";
+                        updateStreakUI(1);
                     }
                     updateDisplay();
                 };
                 container.appendChild(btn);
             });
+        }
+
+        function updateStreakUI(mult) {
+            const streakBox = document.getElementById('streakBox');
+            const streakNum = document.getElementById('streakNum');
+            const multNum = document.getElementById('multNum');
+            const fireIcons = document.getElementById('fireIcons');
+
+            if (streak >= 3) {
+                streakBox.style.display = "block";
+                streakNum.innerText = streak;
+                multNum.innerText = `x${mult}`;
+                
+                if (streak >= 12) fireIcons.innerText = "⚡🔥⚡";
+                else if (streak >= 7) fireIcons.innerText = "🔥🔥";
+                else fireIcons.innerText = "🔥";
+            } else {
+                streakBox.style.display = "none";
+            }
         }
 
         function renderUpgrades() {
@@ -266,7 +318,6 @@
             document.getElementById('cpsCount').innerText = cps;
         }
 
-        // Standard Page Logic
         document.getElementById('themeToggler').onclick = () => {
             const html = document.documentElement;
             const isDark = html.getAttribute('data-bs-theme') === 'dark';
@@ -279,11 +330,9 @@
         };
         document.getElementById("backToTop").onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Start
         setInterval(() => { coins += cps; updateDisplay(); }, 1000);
         renderUpgrades();
         showQuestion();
-
     </script>
 </body>
 </html>
