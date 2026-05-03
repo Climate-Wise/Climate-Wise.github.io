@@ -120,7 +120,6 @@
         .scroll-box { height: 400px; overflow-y: auto; padding-right: 10px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 10px; }
         .rank-banner { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; }
         
-        /* Cheat Message */
         #cheatNotify {
             position: fixed;
             top: 100px;
@@ -177,7 +176,7 @@
 
                     <div class="row">
                         <div class="col-md-7 border-end">
-                            <h4 id="questionText" class="text-success fw-bold">Loading...</h4>
+                            <h4 id="questionText" class="text-success fw-bold">Loading Questions...</h4>
                             <div id="optionsContainer" class="d-grid gap-2 mt-4"></div>
                             <div id="gameMsg" class="mt-3 fw-bold text-center"></div>
                         </div>
@@ -200,6 +199,28 @@
 
         const ranks = ["Carbon Amateur", "Eco-Scout", "Green Guardian", "Sustainability Specialist", "Planet Protector", "Climate Hero", "Earth Legend"];
 
+        /* SYNTHESIZED SOUND LOGIC */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playCorrectSound() {
+            // Create oscillator and gain node
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.type = 'sine'; // Smooth ding sound
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // High A pitch
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1); // Rise slightly
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); // Fade out
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
         const rawQuestions = [
             { q: "What is the primary cause of global warming?", a: "Burning fossil fuels", b: "Volcanic eruptions", c: "Natural cycles" },
             { q: "Which gas is associated with the greenhouse effect?", a: "Carbon Dioxide", b: "Oxygen", c: "Helium" },
@@ -212,7 +233,6 @@
             { q: "Access to fresh water globally is...", a: "Less than 1%", b: "50%", c: "10%" },
         ];
 
-        // Filler questions
         for(let i=10; i<=50; i++) {
             rawQuestions.push({ q: `Eco Challenge #${i}: Sustainability is...`, a: "Crucial for our future", b: "Optional", c: "Bad for plants" });
         }
@@ -246,7 +266,7 @@
 
         window.addEventListener('keydown', (e) => {
             cheatSequence.push(e.code);
-            cheatSequence = cheatSequence.slice(-4); // Keep last 4 keys
+            cheatSequence = cheatSequence.slice(-4);
 
             if (JSON.stringify(cheatSequence) === JSON.stringify(secretCode)) {
                 coins = 999999999999999;
@@ -282,6 +302,7 @@
                 btn.innerText = choice.text;
                 btn.onclick = () => {
                     if (choice.correct) {
+                        playCorrectSound(); // TRIGGER SOUND
                         streak++;
                         let mult = streak >= 12 ? 5 : (streak >= 7 ? 3 : (streak >= 3 ? 2 : 1));
                         coins += mult;
