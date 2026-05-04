@@ -66,7 +66,6 @@
 
         .section-padding { padding: 80px 0; border-bottom: 1px solid rgba(0,0,0,0.05); position: relative; }
         
-        /* Slide Deck Styles */
         .page-indicator {
             background: var(--accent-color);
             color: white;
@@ -93,13 +92,12 @@
             color: var(--accent-color);
         }
 
-        /* Back to Top Button */
         #backToTop {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 99;
-            display: none; /* Hidden by default */
+            display: none;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -136,6 +134,7 @@
             opacity: 0.7;
             margin-top: 8px;
             font-style: italic;
+            display: block; /* Ensures it starts on a new line */
         }
 
         .result-box {
@@ -258,17 +257,17 @@
             <a href="#slide5" class="next-arrow">↓</a>
         </div>
 
-        <!-- SLIDE 5: CAUSES -->
+        <!-- SLIDE 5: CAUSES (FIXED) -->
         <div class="section-padding" id="slide5">
             <span class="page-indicator">Page 5</span>
             <div class="row align-items-center mb-5">
-                <div class="col-md-5 order-md-1 order-2">
+                <div class="col-md-5 order-md-1 order-2 text-center">
                     <img src="cause-info.jpg" alt="Causes" class="about-img">
-                       <p class="citation-text text-center">Source: ("Causes of Climate Change")</p>
+                    <p class="citation-text">Source: ("Causes of Climate Change")</p>
                 </div>
                 <div class="col-md-7 order-md-2 order-1 typewriter-box">
                     <h2 class="text-success">Ok, I know what it is, but who causes it?</h2>
-                    <p id="typewriter_cause">Global warming is largely driven by human activities like the burning of fossil fuels which releases greenhouse gases that trap heat in the atmosphere (Clark and Lee 592). Not only that, powering homes and businesses produces massive amounts of CO2 which is also bad for the environment.  NASA reports that global temperatures have increased by about 1°C since the late 1800s, mainly because rising CO2 levels trap more heat in the atmosphere (Clark and Lee 592). This process adds to rising global temperatures, which as I said above, is not good.  </p>
+                    <p id="typewriter_cause">Global warming is largely driven by human activities like the burning of fossil fuels which releases greenhouse gases that trap heat in the atmosphere (Clark and Lee 592). Not only that, powering homes and businesses produces massive amounts of CO2 which is also bad for the environment. NASA reports that global temperatures have increased by about 1°C since the late 1800s, mainly because rising CO2 levels trap more heat in the atmosphere (Clark and Lee 592). This process adds to rising global temperatures, which as I said above, is not good. </p>
                 </div>
             </div>
             <a href="#slide6" class="next-arrow">↓</a>
@@ -314,7 +313,7 @@
             <div class="row align-items-center mb-5">
                 <div class="col-md-7 typewriter-box">
                     <h2 class="text-success">Share Climate Wise!</h2>
-                    <p id="typewriter_qr"Scan here to visit my site!"</p>
+                    <p id="typewriter_qr">Scan here to visit my site!</p>
                 </div>
                 <div class="col-md-5 text-center">
                     <div class="p-3 bg-white d-inline-block rounded-4 shadow-sm">
@@ -328,11 +327,8 @@
     </div>
 
     <script>
-        /* Back to Top Logic */
         let mybutton = document.getElementById("backToTop");
-
         window.onscroll = function() {scrollFunction()};
-
         function scrollFunction() {
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 mybutton.style.display = "block";
@@ -340,37 +336,31 @@
                 mybutton.style.display = "none";
             }
         }
-
         mybutton.addEventListener("click", function(){
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
-        /* Calculator Logic */
         function calculateFootprint() {
             const transport = parseInt(document.getElementById('transport').value);
             const diet = parseInt(document.getElementById('diet').value);
             const house = parseInt(document.getElementById('house').value);
-            
             const total = (transport + diet) * (house > 4 ? 1.5 : 1);
             const resultBox = document.getElementById('calcResult');
             const title = document.getElementById('resultTitle');
             const desc = document.getElementById('resultDesc');
-            
             resultBox.style.display = "block";
-            
             if (total <= 4) {
                 title.innerText = "Low Carbon Footprint!";
-                desc.innerText = "Yo that's sick! Your lifestyle choices are very planet friendly. You might not even need this site.";
+                desc.innerText = "Yo that's sick! Your lifestyle choices are very planet friendly.";
             } else if (total <= 8) {
-                title.innerText = "Moderate Footprint ";
-                desc.innerText = "Eh, ur doing ok, but there are small changes (like eating more plant-based meals no matter how good meat is) that could help lower your impact.";
+                title.innerText = "Moderate Footprint";
+                desc.innerText = "Doing okay, but there are small changes that could help.";
             } else {
                 title.innerText = "High Carbon Footprint ⚠️";
-                desc.innerText = "Your choices contribute significantly to CO2 emissions. dude what are we doing 😭";
+                desc.innerText = "Your choices contribute significantly to CO2 emissions.";
             }
         }
 
-        /* Theme Toggle */
         const btn = document.getElementById('themeToggler');
         const htmlElement = document.documentElement;
         btn.addEventListener('click', () => {
@@ -380,14 +370,12 @@
             btn.className = isDark ? "btn btn-light rounded-pill px-3 mx-1" : "btn btn-outline-light rounded-pill px-3 mx-1";
         });
 
-        /* Animation Logic */
         function playAnimation(elementId, speed, nextCallback) {
             const element = document.getElementById(elementId);
             if (!element) return;
             const fullText = element.innerHTML;
             element.innerHTML = "";
             element.style.opacity = "1";
-            
             let charIndex = 0;
             function tick() {
                 if (charIndex < fullText.length) {
