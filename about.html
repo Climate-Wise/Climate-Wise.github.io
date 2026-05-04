@@ -334,6 +334,21 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
                     <p class="citation-text mt-3">Scan to visit Climate-wise.github.io</p>
                 </div>
             </div>
+            <a href="#slide9" class="next-arrow">↓</a>
+        </div>
+
+        <!-- SLIDE 9: SITE CREATOR -->
+        <div class="section-padding" id="slide9">
+            <span class="page-indicator">Page 9</span>
+            <div class="row align-items-center mb-5">
+                <div class="col-md-5 order-md-1 order-2">
+                    <img src="creator-photo.jpg" alt="Site Creator" class="about-img">
+                </div>
+                <div class="col-md-7 order-md-2 order-1 typewriter-box">
+                    <h2 class="text-success">Site Creator</h2>
+                    <p id="typewriter_creator">This website was created with the goal of spreading awareness about our environmental impact and providing tools to help individuals make a difference. Every small step counts toward a greener future!</p>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -408,7 +423,9 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
                         playAnimation("typewriter_cause", 5, () => {
                             playAnimation("typewriter_action", 5, () => {
                                 playAnimation("typewriter3", 5, () => {
-                                    playAnimation("typewriter_qr", 5);
+                                    playAnimation("typewriter_qr", 5, () => {
+                                        playAnimation("typewriter_creator", 5);
+                                    });
                                 });
                             });
                         });
