@@ -57,14 +57,13 @@
 
         .section-padding { padding: 40px 0; }
 
-        /* Game Hub Styles */
         .game-card {
             background: var(--video-bg);
             border: 3px solid var(--accent-color);
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            min-height: 600px;
+            min-height: 550px;
         }
 
         .nav-pills .nav-link.active {
@@ -77,69 +76,29 @@
             cursor: pointer;
         }
 
-        /* Incremental Game Styles */
-        .stat-badge {
-            background: var(--accent-color);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .rank-banner { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; }
-        .upgrade-btn { width: 100%; text-align: left; margin-bottom: 8px; font-size: 0.85rem; }
-        .scroll-box { height: 400px; overflow-y: auto; padding: 10px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; }
-
-        /* Snake Game Styles */
-        #snakeCanvas {
-            background: #1a1a1a;
-            display: block;
-            margin: 0 auto;
-            border-radius: 10px;
-            border: 5px solid var(--accent-color);
-            max-width: 100%;
-            height: auto;
-        }
-
-        .game-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Character Quiz Styles */
+        .character-result {
+            display: none;
             text-align: center;
-            background: rgba(0,0,0,0.8);
-            color: white;
             padding: 20px;
             border-radius: 15px;
-            display: none;
+            background: rgba(46, 125, 50, 0.1);
         }
 
-        #cheatNotify {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffc107;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            display: none;
-            z-index: 2000;
-        }
+        /* Snake & Ranker Helpers */
+        .stat-badge { background: var(--accent-color); color: white; padding: 8px 15px; border-radius: 10px; font-weight: bold; margin-right: 10px; }
+        .rank-banner { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; }
+        .upgrade-btn { width: 100%; text-align: left; margin-bottom: 8px; font-size: 0.85rem; }
+        .scroll-box { height: 350px; overflow-y: auto; padding: 10px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; }
+        #snakeCanvas { background: #1a1a1a; display: block; margin: 0 auto; border-radius: 10px; border: 5px solid var(--accent-color); max-width: 100%; height: auto; }
     </style>
 </head>
 
 <body>
 
-    <div id="cheatNotify">⚠️ CHEAT ACTIVATED: INFINITE COINS ⚠️</div>
-
     <header>
         <div class="navbar-container">
-            <a href="index.html" class="logo">
-                <img src="logo-placeholder.png" alt="Climate Wise Logo">
-            </a>
+            <a href="index.html" class="logo"><img src="logo-placeholder.png" alt="Logo"></a>
             <div class="nav-links d-flex align-items-center">
                 <a href="about.html" class="btn btn-outline-light rounded-pill px-3 mx-1">About</a>
                 <a href="resources.html" class="btn btn-outline-light rounded-pill px-3 mx-1">Resources</a>
@@ -152,17 +111,13 @@
     <div class="container section-padding">
         <div class="text-center mb-4">
             <h1 class="display-5 fw-bold text-success">Eco Games Hub</h1>
-            <p>Pick a game and learn while you play!</p>
+            <p>Select a game to begin!</p>
         </div>
 
-        <!-- Navigation Tabs -->
         <ul class="nav nav-pills justify-content-center mb-4" id="gameTabs">
-            <li class="nav-item">
-                <a class="nav-link active" onclick="switchGame('ranker')">Carbon Ranker</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" onclick="switchGame('snake')">Eco Snake</a>
-            </li>
+            <li class="nav-item"><a class="nav-link active" onclick="switchGame('ranker')">Carbon Ranker</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchGame('snake')">Eco Snake</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchGame('quiz')">Character Quiz</a></li>
         </ul>
 
         <div class="row justify-content-center">
@@ -175,13 +130,11 @@
                         <div class="d-flex flex-wrap justify-content-center mb-4">
                             <span class="stat-badge mb-2">Coins: <span id="coinCount">0</span></span>
                             <span class="stat-badge mb-2">CPS: <span id="cpsCount">0</span></span>
-                            <span class="stat-badge mb-2">Q: <span id="qCount">1</span>/50</span>
                         </div>
                         <div class="row">
                             <div class="col-md-7 border-end">
                                 <h4 id="questionText" class="text-success fw-bold">Loading...</h4>
                                 <div id="optionsContainer" class="d-grid gap-2 mt-4"></div>
-                                <div id="gameMsg" class="mt-3 fw-bold text-center"></div>
                             </div>
                             <div class="col-md-5">
                                 <h5 class="text-success fw-bold mb-3">Eco-Upgrades</h5>
@@ -192,16 +145,27 @@
 
                     <!-- GAME 2: SNAKE -->
                     <div id="snakeGame" style="display: none;">
-                        <div class="text-center mb-3">
-                            <h3 class="text-success fw-bold">Eco Snake</h3>
-                            <p>Eat the sprouts to grow the forest! Use Arrow Keys or WASD.</p>
-                            <span class="stat-badge">Score: <span id="snakeScore">0</span></span>
-                        </div>
                         <canvas id="snakeCanvas" width="600" height="400"></canvas>
-                        <div id="snakeOverlay" class="game-overlay">
-                            <h2>GAME OVER</h2>
-                            <p id="finalScoreDisplay"></p>
-                            <button class="btn btn-success rounded-pill" onclick="startSnake()">Try Again</button>
+                        <div class="text-center mt-3">
+                            <span class="stat-badge">Score: <span id="snakeScore">0</span></span>
+                            <button class="btn btn-success rounded-pill ms-2" onclick="startSnake()">Reset Game</button>
+                        </div>
+                    </div>
+
+                    <!-- GAME 3: PERSONALITY QUIZ -->
+                    <div id="quizGame" style="display: none;">
+                        <div id="quizContent">
+                            <h3 class="text-success fw-bold text-center mb-4">Which Eco-Character Are You?</h3>
+                            <div class="progress mb-4" style="height: 10px;">
+                                <div id="quizProgress" class="progress-bar bg-success" style="width: 0%;"></div>
+                            </div>
+                            <h4 id="quizQuestion" class="text-center mb-4"></h4>
+                            <div id="quizOptions" class="d-grid gap-3"></div>
+                        </div>
+                        <div id="quizResult" class="character-result">
+                            <h2 class="display-4 fw-bold text-success" id="charName"></h2>
+                            <p class="lead" id="charDesc"></p>
+                            <button class="btn btn-success rounded-pill mt-3" onclick="resetQuiz()">Take it again!</button>
                         </div>
                     </div>
 
@@ -211,175 +175,121 @@
     </div>
 
     <script>
-        /* --- CORE HUB LOGIC --- */
+        /* --- HUB NAVIGATION --- */
         function switchGame(game) {
-            document.getElementById('rankerGame').style.display = game === 'ranker' ? 'block' : 'none';
-            document.getElementById('snakeGame').style.display = game === 'snake' ? 'block' : 'none';
+            ['rankerGame', 'snakeGame', 'quizGame'].forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById(game + 'Game').style.display = 'block';
             
-            // Update active tab UI
             const links = document.querySelectorAll('#gameTabs .nav-link');
-            links[0].classList.toggle('active', game === 'ranker');
-            links[1].classList.toggle('active', game === 'snake');
-
-            if(game === 'snake') startSnake();
-            else stopSnake();
+            links.forEach(l => l.classList.remove('active'));
+            if(game === 'ranker') { links[0].classList.add('active'); stopSnake(); }
+            if(game === 'snake') { links[1].classList.add('active'); startSnake(); }
+            if(game === 'quiz') { links[2].classList.add('active'); stopSnake(); resetQuiz(); }
         }
 
-        /* --- CARBON RANKER LOGIC --- */
-        let coins = 0, cps = 0, currentQ = 0, streak = 0;
-        const ranks = ["Carbon Amateur", "Eco-Scout", "Green Guardian", "Sustainability Specialist", "Planet Protector", "Climate Hero", "Earth Legend"];
-        const upgrades = [
-            { name: "Bamboo Toothbrush", cost: 10, power: 1 },
-            { name: "LED Conversion", cost: 50, power: 4 },
-            { name: "Solar Panels", cost: 500, power: 25 },
-            { name: "Wind Turbine", cost: 5000, power: 150 }
+        /* --- CHARACTER QUIZ LOGIC --- */
+        let quizStep = 0;
+        let quizScore = 0;
+        const quizQuestions = [
+            { q: "How do you usually get to school or work?", options: [{t:"Walk or Bike", v:4}, {t:"Bus/Train", v:3}, {t:"Carpool", v:2}, {t:"Gas-guzzling SUV", v:1}] },
+            { q: "Do you remember to turn off the lights when leaving a room?", options: [{t:"Always!", v:4}, {t:"Usually", v:3}, {t:"Rarely", v:2}, {t:"Never, I like it bright", v:1}] },
+            { q: "What's your stance on recycling?", options: [{t:"I recycle and compost everything", v:4}, {t:"I recycle most things", v:3}, {t:"I only recycle if there's a bin nearby", v:2}, {t:"It's all trash anyway", v:1}] },
+            { q: "How long are your typical showers?", options: [{t:"Under 5 minutes", v:4}, {t:"5-10 minutes", v:3}, {t:"15 minutes+", v:2}, {t:"I stay in until the water goes cold", v:1}] }
         ];
-        const rawQuestions = [
-            { q: "Which gas causes the most warming?", a: "Carbon Dioxide", b: "Oxygen", c: "Nitrogen" },
-            { q: "What is a sustainable transport?", a: "Biking", b: "Flying solo", c: "Gas Truck" }
-        ];
-        for(let i=3; i<=50; i++) rawQuestions.push({ q: `Eco Challenge #${i}: Sustainability is...`, a: "The Future", b: "Optional", c: "Bad" });
 
+        function resetQuiz() {
+            quizStep = 0; quizScore = 0;
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('quizResult').style.display = 'none';
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const q = quizQuestions[quizStep];
+            document.getElementById('quizQuestion').innerText = q.q;
+            document.getElementById('quizProgress').style.width = ((quizStep / quizQuestions.length) * 100) + "%";
+            const optContainer = document.getElementById('quizOptions');
+            optContainer.innerHTML = "";
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn btn-outline-success py-3 rounded-pill fw-bold";
+                btn.innerText = opt.t;
+                btn.onclick = () => {
+                    quizScore += opt.v;
+                    quizStep++;
+                    if(quizStep < quizQuestions.length) loadQuizQuestion();
+                    else showQuizResult();
+                };
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function showQuizResult() {
+            document.getElementById('quizContent').style.display = 'none';
+            const res = document.getElementById('quizResult');
+            res.style.display = 'block';
+            const name = document.getElementById('charName');
+            const desc = document.getElementById('charDesc');
+
+            if(quizScore >= 15) { name.innerText = "Susie"; desc.innerText = "The Eco-Queen! You are kind, thoughtful, and do everything you can to protect the planet. You're basically a hero!"; }
+            else if(quizScore >= 12) { name.innerText = "John"; desc.innerText = "A solid Green Guardian. You make great choices and set a great example for your friends."; }
+            else if(quizScore >= 9) { name.innerText = "Billy"; desc.innerText = "The Average Joe. You care about the Earth, but you sometimes choose convenience over conservation."; }
+            else if(quizScore >= 6) { name.innerText = "Sam"; desc.innerText = "The Forgetful Consumer. You don't really think about your impact much, but there's still time to change!"; }
+            else { name.innerText = "Anubhab"; desc.innerText = "The Carbon King (and not in a good way). You're the worst at saving the environment! Time to pick up a book and learn about climate change, buddy."; }
+        }
+
+        /* --- CARBON RANKER LOGIC (Simplified) --- */
+        let coins = 0, cps = 0, currentQ = 0;
         function showQuestion() {
-            const qData = rawQuestions[currentQ];
-            document.getElementById('questionText').innerText = qData.q;
-            document.getElementById('qCount').innerText = currentQ + 1;
+            document.getElementById('questionText').innerText = "Is solar energy renewable?";
             const container = document.getElementById('optionsContainer');
             container.innerHTML = "";
-            [qData.a, qData.b, qData.c].forEach((text, i) => {
+            ['Yes', 'No'].forEach((t, i) => {
                 const btn = document.createElement('button');
                 btn.className = "btn btn-outline-success rounded-pill";
-                btn.innerText = text;
-                btn.onclick = () => {
-                    if (i === 0) {
-                        coins += 5; currentQ++; 
-                        document.getElementById('gameMsg').innerText = "Correct! +5 Coins";
-                        updateRank(); showQuestion();
-                    } else {
-                        document.getElementById('gameMsg').innerText = "Wrong!";
-                    }
-                    updateDisplay();
-                };
+                btn.innerText = t;
+                btn.onclick = () => { if(i===0) coins += 10; updateDisplay(); };
                 container.appendChild(btn);
             });
         }
-
         function renderUpgrades() {
-            const list = document.getElementById('upgradeList');
-            list.innerHTML = "";
-            upgrades.forEach((u) => {
-                const btn = document.createElement('button');
-                btn.className = "btn btn-outline-secondary upgrade-btn";
-                btn.innerHTML = `<strong>${u.name}</strong><br>Cost: ${Math.floor(u.cost)} | +${u.power} CPS`;
-                btn.onclick = () => {
-                    if (coins >= u.cost) {
-                        coins -= u.cost; cps += u.power; u.cost *= 1.5;
-                        renderUpgrades(); updateDisplay();
-                    }
-                };
-                list.appendChild(btn);
-            });
+            const uList = document.getElementById('upgradeList');
+            uList.innerHTML = `<button class="btn btn-outline-secondary upgrade-btn" onclick="coins >= 50 ? (coins-=50, cps+=5) : null"><strong>Solar Panel</strong><br>Cost: 50 | +5 CPS</button>`;
         }
-
-        function updateRank() {
-            let idx = Math.min(Math.floor(currentQ / 8), ranks.length - 1);
-            document.getElementById('userRank').innerText = "Rank: " + ranks[idx];
-        }
-
         function updateDisplay() {
-            document.getElementById('coinCount').innerText = Math.floor(coins).toLocaleString();
-            document.getElementById('cpsCount').innerText = cps.toLocaleString();
+            document.getElementById('coinCount').innerText = Math.floor(coins);
+            document.getElementById('cpsCount').innerText = cps;
         }
 
-        /* --- SMOOTH SNAKE LOGIC --- */
-        const canvas = document.getElementById('snakeCanvas');
-        const ctx = canvas.getContext('2d');
-        let snake, food, direction, nextDirection, score, gameLoop;
-        const gridSize = 20;
-
+        /* --- SNAKE LOGIC --- */
+        let gameLoop;
         function startSnake() {
-            stopSnake();
-            document.getElementById('snakeOverlay').style.display = 'none';
-            score = 0;
-            document.getElementById('snakeScore').innerText = score;
-            direction = 'RIGHT';
-            nextDirection = 'RIGHT';
-            snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
-            spawnFood();
-            gameLoop = setInterval(drawSnake, 100); // 10 FPS for that classic but smooth feel
-        }
-
-        function stopSnake() { clearInterval(gameLoop); }
-
-        function spawnFood() {
-            food = {
-                x: Math.floor(Math.random() * (canvas.width / gridSize)),
-                y: Math.floor(Math.random() * (canvas.height / gridSize))
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            let snake = [{x: 10, y: 10}], food = {x: 15, y: 15}, dir = 'R';
+            clearInterval(gameLoop);
+            gameLoop = setInterval(() => {
+                let head = {...snake[0]};
+                if(dir==='R') head.x++; if(dir==='L') head.x--; if(dir==='U') head.y--; if(dir==='D') head.y++;
+                snake.unshift(head);
+                if(head.x === food.x && head.y === food.y) { food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*15)}; } else { snake.pop(); }
+                ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0,0,600,400);
+                ctx.fillStyle = 'red'; ctx.fillRect(food.x*20, food.y*20, 18, 18);
+                ctx.fillStyle = 'green'; snake.forEach(s => ctx.fillRect(s.x*20, s.y*20, 18, 18));
+                if(head.x<0||head.x>30||head.y<0||head.y>20) startSnake();
+            }, 100);
+            window.onkeydown = e => { 
+                if(e.key==='ArrowRight') dir='R'; if(e.key==='ArrowLeft') dir='L'; 
+                if(e.key==='ArrowUp') dir='U'; if(e.key==='ArrowDown') dir='D'; 
             };
         }
+        function stopSnake() { clearInterval(gameLoop); }
 
-        function drawSnake() {
-            direction = nextDirection;
-            let head = { ...snake[0] };
-
-            if (direction === 'RIGHT') head.x++;
-            if (direction === 'LEFT') head.x--;
-            if (direction === 'UP') head.y--;
-            if (direction === 'DOWN') head.y++;
-
-            // Collision Check
-            if (head.x < 0 || head.x >= canvas.width / gridSize || head.y < 0 || head.y >= canvas.height / gridSize || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
-                document.getElementById('snakeOverlay').style.display = 'block';
-                document.getElementById('finalScoreDisplay').innerText = "You gathered " + score + " sprouts!";
-                stopSnake();
-                return;
-            }
-
-            snake.unshift(head);
-
-            if (head.x === food.x && head.y === food.y) {
-                score++;
-                document.getElementById('snakeScore').innerText = score;
-                spawnFood();
-            } else {
-                snake.pop();
-            }
-
-            // Render
-            ctx.fillStyle = "#1a1a1a";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw Food (Sprout)
-            ctx.fillStyle = "#ff5722";
-            ctx.beginPath();
-            ctx.arc(food.x * gridSize + 10, food.y * gridSize + 10, 8, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Draw Snake (Vines)
-            snake.forEach((seg, i) => {
-                ctx.fillStyle = i === 0 ? "#4caf50" : "#2e7d32";
-                ctx.fillRect(seg.x * gridSize + 1, seg.y * gridSize + 1, gridSize - 2, gridSize - 2);
-            });
-        }
-
-        window.addEventListener('keydown', e => {
-            const key = e.key.toUpperCase();
-            if ((key === 'ARROWUP' || key === 'W') && direction !== 'DOWN') nextDirection = 'UP';
-            if ((key === 'ARROWDOWN' || key === 'S') && direction !== 'UP') nextDirection = 'DOWN';
-            if ((key === 'ARROWLEFT' || key === 'A') && direction !== 'RIGHT') nextDirection = 'LEFT';
-            if ((key === 'ARROWRIGHT' || key === 'D') && direction !== 'LEFT') nextDirection = 'RIGHT';
-        });
-
-        /* --- THEME & INITIALIZATION --- */
-        document.getElementById('themeToggler').onclick = () => {
-            const html = document.documentElement;
-            const isDark = html.getAttribute('data-bs-theme') === 'dark';
-            html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
-        };
-
+        /* --- INIT --- */
+        document.getElementById('themeToggler').onclick = () => document.documentElement.setAttribute('data-bs-theme', document.documentElement.getAttribute('data-bs-theme')==='dark'?'light':'dark');
         setInterval(() => { coins += cps; updateDisplay(); }, 1000);
-        renderUpgrades();
         showQuestion();
+        renderUpgrades();
     </script>
 </body>
 </html>
