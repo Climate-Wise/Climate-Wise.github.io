@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About & Interview | Climate Wise</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -27,45 +27,51 @@
             --accent-color: #4caf50;
         }
 
-        body { 
-            font-family: 'Fredoka', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             transition: 0.3s ease;
             margin: 0;
             scroll-behavior: smooth;
         }
 
-        header { 
-            background: var(--header-bg); 
-            padding: 1rem 0; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+        header {
+            background: var(--header-bg);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .navbar-container { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            max-width: 1100px; 
-            margin: auto; 
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: auto;
             padding: 0 20px;
         }
 
-        .logo img { height: 60px; }
+        .logo img {
+            height: 60px;
+        }
 
         .about-img {
             width: 100%;
             height: 350px;
             object-fit: cover;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .section-padding { padding: 80px 0; border-bottom: 1px solid rgba(0,0,0,0.05); position: relative; }
-        
+        .section-padding {
+            padding: 80px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
         .page-indicator {
             background: var(--accent-color);
             color: white;
@@ -104,7 +110,7 @@
             background-color: var(--accent-color);
             color: white;
             border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             font-size: 1.5rem;
             cursor: pointer;
             transition: opacity 0.3s;
@@ -114,13 +120,16 @@
             background-color: #1b5e20;
         }
 
-        .typewriter-box { min-height: 100px; }
+        .typewriter-box {
+            min-height: 100px;
+        }
 
-        .video-wrapper, .calc-wrapper {
+        .video-wrapper,
+        .calc-wrapper {
             background: var(--video-bg);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: 40px;
         }
 
@@ -134,7 +143,7 @@
             opacity: 0.7;
             margin-top: 8px;
             font-style: italic;
-            display: block; /* Ensures it starts on a new line */
+            display: block;
         }
 
         .result-box {
@@ -146,12 +155,36 @@
             margin-top: 20px;
             border: 2px solid #2e7d32;
         }
+
         [data-bs-theme="dark"] .result-box {
             background: #1b5e20;
             color: #e8f5e9;
         }
+
+        /* --- COOL WAVY TEXT EFFECT --- */
+        .wavy-text {
+            display: inline-block;
+            animation: wavy 1.5s ease-in-out infinite;
+            color: var(--accent-color);
+        }
+
+        @keyframes wavy {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .warning-text {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 5px solid #ffc107;
+            border-radius: 5px;
+            display: block;
+            margin: 15px 0;
+            color: #856404;
+        }
     </style>
 </head>
+
 <body>
 
     <button id="backToTop" title="Go to top">↑</button>
@@ -172,14 +205,14 @@
     </header>
 
     <div class="container">
-        
+
         <!-- SLIDE 1: MISSION -->
         <div class="section-padding" id="slide1">
             <span class="page-indicator">Page 1</span>
             <div class="row align-items-center mb-5">
                 <div class="col-md-7 typewriter-box">
-                    <h1 class="display-4 text-success fw-bold">Our Mission:</h1>
-                    <p id="typewriter1" class="lead">Do you really know how bad we are hurting the world right now? Did you know that the burning of fossil fuels is the main cause of the increase in the global climate? I bet you didn’t know that YOU, yes, you, burn 23 barrels of petroleum per year (Herring 1)! Before you continue, please use the carbon footprint calculator below to calculate your carbon footprint levels. ⚠️Please note that the calculator given below is strictly for use on the site and is not the best calculator out there, please go to the “recourses” tab for a better calculator ⚠️. Your Carbon footprint is calculated based on the sum of all the greenhouse gas emissions from daily activities and consumption (Steps to Lower Your Carbon Footprint). This calculator will give you a very basic rundown on where you fall.  </p>
+                    <h1 class="display-4 text-success fw-bold wavy-text">Our Mission:</h1>
+                    <p id="typewriter1" class="lead">Do you really know how bad we are hurting the world right now? Did you know that the burning of fossil fuels is the main cause of the increase in the global climate? I bet you didn’t know that YOU, yes, you, burn 23 barrels of petroleum per year (Herring 1)! Before you continue, please use the carbon footprint calculator below to calculate your carbon footprint levels. <span class="warning-text">⚠️Please note that the calculator given below is strictly for use on the site and is not the best calculator out there, please go to the “recourses” tab for a better calculator ⚠️.</span> Your Carbon footprint is calculated based on the sum of all the greenhouse gas emissions from daily activities and consumption (Steps to Lower Your Carbon Footprint). This calculator will give you a very basic rundown on where you fall. </p>
                 </div>
                 <div class="col-md-5">
                     <img src="placeholder-about.jpg" alt="Mission" class="about-img">
@@ -192,7 +225,7 @@
         <div class="section-padding" id="slide2">
             <span class="page-indicator">Page 2</span>
             <div class="calc-wrapper mb-5" id="calcSection">
-                <h2 class="text-success fw-bold mb-4">Quick Impact Calculator</h2>
+                <h2 class="text-success fw-bold mb-4 wavy-text">Quick Impact Calculator</h2>
                 <form id="carbonForm">
                     <div class="row g-3">
                         <div class="col-md-4">
@@ -234,8 +267,8 @@
                     <img src="placeholder-me.jpg" alt="Elijah" class="about-img">
                 </div>
                 <div class="col-md-7 order-md-2 order-1 typewriter-box">
-                    <h2 class="text-success">Site maker</h2>
-                    <p id="typewriter2">I am Elijah Funches. I kinda made this site. This took me way too long to make</p>
+                    <h2 class="text-success wavy-text">Site maker</h2>
+                    <p id="typewriter2" class="fw-bold">I am Elijah Funches. I kinda made this site. This took me way too long to make</p>
                 </div>
             </div>
             <a href="#slide4" class="next-arrow">↓</a>
@@ -246,7 +279,7 @@
             <span class="page-indicator">Page 4</span>
             <div class="row align-items-center mb-5">
                 <div class="col-md-7 typewriter-box">
-                    <h2 class="text-success">What is Global Warming anyway?</h2>
+                    <h2 class="text-success wavy-text">What is Global Warming anyway?</h2>
                     <p id="typewriter_warming">Now that you have seen your basic carbon footprint levels, we now need to know what Global warming even is to improve it. Global warming is the rapid increase in Earth’s average surface temperature (Climate Change). This change is long term- it’s not something that can disappear with a snap of your fingers. This isn’t a hypothetical or incremental change; however, “satellites have helped scientists collect information about our planet and its climate all over the world to reveal patterns of change,” (Climate Change). Global warming causes an increase in wildfires, rising sea levels, and other natural events like droughts, which can destroy habitats, and so much more (“Overview of Greenhouse Gases). See the graph on the increase in global average surface temperature. On the X axis we can see the “year,” and on the Y axis we can see the “difference from 1901-2000 in average degrees Celsius.” </p>
                 </div>
                 <div class="col-md-5">
@@ -257,7 +290,7 @@
             <a href="#slide5" class="next-arrow">↓</a>
         </div>
 
-        <!-- SLIDE 5: CAUSES (FIXED) -->
+        <!-- SLIDE 5: CAUSES -->
         <div class="section-padding" id="slide5">
             <span class="page-indicator">Page 5</span>
             <div class="row align-items-center mb-5">
@@ -266,7 +299,7 @@
                     <p class="citation-text">Source: ("Causes of Climate Change")</p>
                 </div>
                 <div class="col-md-7 order-md-2 order-1 typewriter-box">
-                    <h2 class="text-success">Ok, I know what it is, but who causes it?</h2>
+                    <h2 class="text-success wavy-text">Ok, I know what it is, but who causes it?</h2>
                     <p id="typewriter_cause">Global warming is largely driven by human activities like the burning of fossil fuels like coal, oil, and natural gas which release greenhouse gases that trap heat in the atmosphere (Clark and Lee 592). These gases (specifically carbon dioxide and methane) trap heat and prevent it from escaping back into space (Clark and Lee 592). To the young people who could be reading this, think of it like your bed. When we release more greenhouse gasses, we add a blanket to your mattress. More blankets = an increase in heat. In the winter you may be ok, you’re not that hot- but hotter than you should be. In summer, however, you’ll be burning! Now imagine if blankets just kept getting added- you would melt. NASA reports that global temperatures have increased by about 1°C since the late 1800s, mainly because rising CO2 levels trap more heat in the atmosphere (Clark and Lee 592). This process adds to rising global temperatures, which, as I said, can be detrimental to our society. You, yes, you, and your parents are contributing to this- not by a-lot, but you are 100% playing a role. Going back to the bed comparison, you aren’t adding blankets to the bed, places like factories and power plants (Clark and Lee 593). You are adding more like thin sheets- so if only you were the one adding to the bed, you wouldn’t be increasing the heat by much. However, since hundred to thousands are adding their sheets to the bed every year, those sheets feel more like blankets now. This is why it helps to lower your carbon footprint, to limit the number of sheets we place on the beds if that makes sense.</p>
                 </div>
             </div>
@@ -278,7 +311,7 @@
             <span class="page-indicator">Page 6</span>
             <div class="row align-items-center mb-5">
                 <div class="col-md-7 typewriter-box">
-                    <h2 class="text-success">Can we really even do anything? (Short answer, yes)</h2>
+                    <h2 class="text-success wavy-text">Can we really even do anything? (Short answer, yes)</h2>
                     <p id="typewriter_action">Can you as in just you? Eh, kind of, but not really. Can we? Yes, 100%! As I have stated above, it’s a collective effort. While not eating meat or riding a bike won't save the world, these collective actions can really make an impact. Ways we can lower our foot print are shown here: We can switch to renewable sources of energy (such as solar and wind energy) to power our homes and buildings, we can drive electric vehicles instead of those that burn fossil fuels, we can also support more local businesses that use and promote sustainable, climate-smart practices, and you can even think of more (Herring 1)! So, if only you decide to make a change, the world isn't changing much. If we all work to change- then of course! This is why I call for all of you to make a change within our community and not just read this and never think of it again. Actually, get up and do something!</p>
                 </div>
                 <div class="col-md-5">
@@ -294,20 +327,20 @@
             <div class="video-wrapper">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <h2 class="text-success fw-bold mb-3">Watch my interview with the expert!</h2>
-                        <p id="typewriter3" class="mb-4">Watch my interview with Carmen Ellis, one of the greatest Environmental Health Specialists of all time. We discuss how you can lower your carbon footprint.  
+                        <h2 class="text-success fw-bold mb-3 wavy-text">Watch my interview with the expert!</h2>
+                        <p id="typewriter3" class="mb-4">Watch my interview with Carmen Ellis, one of the greatest Environmental Health Specialists of all time. We discuss how you can lower your carbon footprint.
 
-The questions I asked are shown here: Do you believe individuals can really make a change for the environment, or is it more like a systemic issue that an average person can't really do anything about? 
+                            The questions I asked are shown here: Do you believe individuals can really make a change for the environment, or is it more like a systemic issue that an average person can't really do anything about?
 
-How do you think the long-term effects of global warming will affect your everyday life? 
+                            How do you think the long-term effects of global warming will affect your everyday life?
 
-In your own words, what is a carbon footprint? 
+                            In your own words, what is a carbon footprint?
 
-What are three realistic changes anybody can do to start lowering their carbon footprint? 
+                            What are three realistic changes anybody can do to start lowering their carbon footprint?
 
-Do you think there are some ways that could be ineffective and would not help, or do you know if they're ineffective or not? 
+                            Do you think there are some ways that could be ineffective and would not help, or do you know if they're ineffective or not?
 
-From what you've seen, what's the hardest lifestyle change that you've seen people resist? </p>
+                            From what you've seen, what's the hardest lifestyle change that you've seen people resist? </p>
                     </div>
                     <div class="col-lg-6">
                         <div class="ratio ratio-16x9 shadow-lg">
@@ -324,7 +357,7 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
             <span class="page-indicator">Page 8</span>
             <div class="row align-items-center mb-5">
                 <div class="col-md-7 typewriter-box">
-                    <h2 class="text-success">Share Climate Wise!</h2>
+                    <h2 class="text-success wavy-text">Share Climate Wise!</h2>
                     <p id="typewriter_qr">Scan here to visit my site!</p>
                 </div>
                 <div class="col-md-5 text-center">
@@ -334,19 +367,14 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
                     <p class="citation-text mt-3">Scan to visit Climate-wise.github.io</p>
                 </div>
             </div>
-            <a href="#slide9" class="next-arrow">↓</a>
-        </div>
-
-    
-                </div>
-            </div>
         </div>
 
     </div>
 
     <script>
         let mybutton = document.getElementById("backToTop");
-        window.onscroll = function() {scrollFunction()};
+        window.onscroll = function() { scrollFunction() };
+
         function scrollFunction() {
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 mybutton.style.display = "block";
@@ -354,8 +382,8 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
                 mybutton.style.display = "none";
             }
         }
-        mybutton.addEventListener("click", function(){
-            window.scrollTo({top: 0, behavior: 'smooth'});
+        mybutton.addEventListener("click", function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         function calculateFootprint() {
@@ -395,6 +423,7 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
             element.innerHTML = "";
             element.style.opacity = "1";
             let charIndex = 0;
+
             function tick() {
                 if (charIndex < fullText.length) {
                     element.innerHTML += fullText.charAt(charIndex);
@@ -414,9 +443,7 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
                         playAnimation("typewriter_cause", 5, () => {
                             playAnimation("typewriter_action", 5, () => {
                                 playAnimation("typewriter3", 5, () => {
-                                    playAnimation("typewriter_qr", 5, () => {
-                                        playAnimation("typewriter_creator", 5);
-                                    });
+                                    playAnimation("typewriter_qr", 5);
                                 });
                             });
                         });
@@ -426,4 +453,5 @@ From what you've seen, what's the hardest lifestyle change that you've seen peop
         });
     </script>
 </body>
+
 </html>
